@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="jp">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+        const can = document.createElement("canvas");
+        const con = can.getContext("2d");
+        can.width = 300;
+        can.height = 300;
+        can.style.background = "gray";
+        document.body.appendChild(can);
+
+        let vertex = [
+            { x: 100, y: 100, z: 200 },
+            { x: 200, y: 100, z: 200 },
+            { x: 200, y: 100, z: 100 },
+            { x: 100, y: 100, z: 100 },
+        ];
+
+        class Camera {
+            constructor() {
+
+                this.coord = {
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                };
+
+                this.rotate = {
+                    x: 0,
+                    z: 0,
+                };
+
+                this.normalVector = {
+                    length: 100,
+                    st: {
+                        x: this.x,
+                        y: this.y,
+                        z: this.z,
+                    },
+                    ed: {
+                        x: 0,
+                        y: 0,
+                        z: 0,
+                    },
+                    vector: {
+                        x: 0,
+                        y: 0,
+                        z: 0,
+                    },
+                };
+
+                this.planeEquation = {
+                    a: this.normalVector.vector.x,
+                    b: this.normalVector.vector.y,
+                    c: this.normalVector.vector.z,
+                    d: this.normalVector.vector.x * -this.coord.x +
+                        this.normalVector.vector.y * -this.coord.y +
+                        this.normalVector.vector.z * -this.coord.z,
+                };
+
+            }
+            update() {
+                this.normalVector.ed.y = cos(this.rotate.x) * this.normalVector.length;
+                this.normalVector.ed.z = sin(this.rotate.x) * this.normalVector.length;
+                this.normalVector.ed.x = sin(this.rotate.z) * this.normalVector.length;
+                console.log(this.normalVector.ed.x);
+                console.log(this.normalVector.ed.y);
+                console.log(this.normalVector.ed.z);
+
+                this.normalVector.vector.x = this.normalVector.ed.x - this.normalVector.st.x;
+                this.normalVector.vector.y = this.normalVector.ed.y - this.normalVector.st.y;
+                this.normalVector.vector.z = this.normalVector.ed.z - this.normalVector.st.z;
+
+                this.planeEquation.a = this.normalVector.vector.x;
+                this.planeEquation.b = this.normalVector.vector.y;
+                this.planeEquation.c = this.normalVector.vector.z;
+                this.planeEquation.d =
+                    this.normalVector.vector.x * -this.coord.x +
+                    this.normalVector.vector.y * -this.coord.y +
+                    this.normalVector.vector.z * -this.coord.z;
+            }
+        }
+
+        let camera = new Camera();
+
+        camera.update();
+
+        function sin(theta) {
+            return (Math.sin(Math.PI / 180 * theta));
+        }
+        function cos(theta) {
+            return (Math.cos(Math.PI / 180 * theta));
+        }
+        function tan(theta) {
+            return (Math.tan(Math.PI / 180 * theta));
+        }
+
+        function mainLoop() {
+            con.clearRect(0, 0, can.width, can.height);
+
+            const vector = camera.normalVector;
+            const planeEq = camera.planeEquation;
+
+            let newVertex = [];
+            let d2Vertex = [];
+
+            for (let i = 0; i < vertex.length; i++) {
+                const point = vertex[i];
+                const length = Math.sqrt(
+                    (camera.x - point.x) ** 2 +
+                    (camera.y - point.y) ** 2 +
+                    (camera.z - point.z) ** 2
+                );
+                const t = -(planeEq.a * point.x + planeEq.b * point.y + planeEq.c * point.z + planeEq.d)
+                    / (planeEq.a * vector.x + planeEq.b * vector.y + planeEq.c * vector.z);
+                newVertex[i] = {
+                    x: vector.x * t + point.x,
+                    y: vector.y * t + point.y,
+                    z: vector.z * t + point.z,
+                };
+
+                let tmpLen = Math.sqrt(
+                    (camera.x - newVertex[i].x) ** 2 +
+                    (camera.y - newVertex[i].y) ** 2 +
+                    (camera.z - newVertex[i].z) ** 2
+                );
+
+            }
+
+        }
+
+        setInterval(mainLoop, 1000 / 60);
+
+    </script>
+</body>
+
+</html>
