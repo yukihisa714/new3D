@@ -178,7 +178,7 @@ function mainLoop() {
             (camera.coord.z - newVertex[i].z) ** 2
         );
 
-        tmpVtx = newVertex[i];
+        let tmpVtx = newVertex[i];
 
         let dif = {};
         dif.x = tmpVtx.x - camera.coord.x;
