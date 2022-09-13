@@ -5,7 +5,7 @@ can.height = 300;
 can.style.background = "gray";
 document.body.appendChild(can);
 
-let vertex = [
+let glovalVertex = [
     { x: 100, y: 100, z: 200 },
     { x: 200, y: 100, z: 200 },
     { x: 200, y: 100, z: 100 },
@@ -20,47 +20,48 @@ let vertex = [
 class Camera {
     constructor() {
 
+        // カメラの座標
         this.coord = {
             x: 0,
             y: 0,
             z: 0,
         };
 
+        // カメラの回転
         this.rotate = {
             x: 0,
             z: 0,
         };
 
+        // 法線ベクトル
         this.normalVector = {
-            length: 100,
-            st: {},
-            ed: {},
-            vector: {},
+            length: 100, // 長さ
+            st: {}, // 始点
+            ed: {}, // 終点
+            vector: {}, // ベクトル
         };
 
+        // カメラの平面の方程式
         this.planeEquation = {};
 
+        // カメラの移動速度
         this.speed = 2;
 
     }
     update() {
         if (key[68]) { // 右
-            // this.coord.x += 2;
             this.x += cos(this.rotate.z + 90) * this.speed;
             this.y += sin(this.rotate.z + 90) * this.speed;
         }
         if (key[65]) { // 左
-            // this.coord.x -= 2;
             this.x -= cos(this.rotate.z + 90) * this.speed;
             this.y -= sin(this.rotate.z + 90) * this.speed;
         }
         if (key[87]) { // 前
-            // this.coord.y += 2;
             this.x += cos(this.rotate.z + 0) * this.speed;
             this.y += sin(this.rotate.z + 0) * this.speed;
         }
         if (key[83]) { // 後ろ
-            // this.coord.y -= 2;
             this.x -= cos(this.rotate.z + 0) * this.speed;
             this.y -= sin(this.rotate.z + 0) * this.speed;
         }
@@ -76,6 +77,7 @@ class Camera {
         if (key[38]) this.rotate.x -= 2; // 上
         if (key[40]) this.rotate.x += 2; // 下
 
+        // 法線ベクトル
         this.normalVector.st = {
             x: this.coord.x,
             y: this.coord.y,
@@ -146,28 +148,28 @@ function mainLoop() {
 
     camera.update();
 
-    const vector = camera.normalVector.vector;
+    const camVector = camera.normalVector.vector;
     const planeEq = camera.planeEquation;
 
-    con.fillText(vector.x + "," + vector.y + "," + vector.z, 10, 250);
+    con.fillText(camVector.x + "," + camVector.y + "," + camVector.z, 10, 250);
 
 
     let newVertex = [];
     let d2Vertex = [];
 
-    for (let i = 0; i < vertex.length; i++) {
-        const point = vertex[i];
+    for (let i = 0; i < glovalVertex.length; i++) {
+        const point = glovalVertex[i];
         const length = Math.sqrt(
             (camera.coord.x - point.x) ** 2 +
             (camera.coord.y - point.y) ** 2 +
             (camera.coord.z - point.z) ** 2
         );
         const t = -(planeEq.a * point.x + planeEq.b * point.y + planeEq.c * point.z + planeEq.d)
-            / (planeEq.a * vector.x + planeEq.b * vector.y + planeEq.c * vector.z);
+            / (planeEq.a * camVector.x + planeEq.b * camVector.y + planeEq.c * camVector.z);
         newVertex[i] = {
-            x: vector.x * t + point.x,
-            y: vector.y * t + point.y,
-            z: vector.z * t + point.z,
+            x: camVector.x * t + point.x,
+            y: camVector.y * t + point.y,
+            z: camVector.z * t + point.z,
         };
 
         con.fillText(newVertex[i].x + "," + newVertex[i].y + "," + newVertex[i].z, 10, i * 10 + 120);
