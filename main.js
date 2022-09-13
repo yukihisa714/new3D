@@ -50,20 +50,20 @@ class Camera {
     }
     update() {
         if (key[68]) { // 右
-            this.x += cos(this.rotate.z + 90) * this.speed;
-            this.y += sin(this.rotate.z + 90) * this.speed;
+            this.coord.y += cos(this.rotate.z + 90) * this.speed;
+            this.coord.x += sin(this.rotate.z + 90) * this.speed;
         }
         if (key[65]) { // 左
-            this.x -= cos(this.rotate.z + 90) * this.speed;
-            this.y -= sin(this.rotate.z + 90) * this.speed;
+            this.coord.y -= cos(this.rotate.z + 90) * this.speed;
+            this.coord.x -= sin(this.rotate.z + 90) * this.speed;
         }
         if (key[87]) { // 前
-            this.x += cos(this.rotate.z + 0) * this.speed;
-            this.y += sin(this.rotate.z + 0) * this.speed;
+            this.coord.y += cos(this.rotate.z + 0) * this.speed;
+            this.coord.x += sin(this.rotate.z + 0) * this.speed;
         }
         if (key[83]) { // 後ろ
-            this.x -= cos(this.rotate.z + 0) * this.speed;
-            this.y -= sin(this.rotate.z + 0) * this.speed;
+            this.coord.y -= cos(this.rotate.z + 0) * this.speed;
+            this.coord.x -= sin(this.rotate.z + 0) * this.speed;
         }
         if (key[32]) { // 上
             this.coord.z += this.speed;
@@ -123,6 +123,7 @@ let camera = new Camera();
 let key = [];
 document.onkeydown = (e) => {
     key[e.keyCode] = true;
+    // console.log(e.key);
 }
 document.onkeyup = (e) => {
     key[e.keyCode] = false;
@@ -172,7 +173,7 @@ function mainLoop() {
             z: camVector.z * t + point.z,
         };
 
-        con.fillText(newVertex[i].x + "," + newVertex[i].y + "," + newVertex[i].z, 10, i * 10 + 120);
+        con.fillText(newVertex[i].x.toFixed(2) + "," + newVertex[i].y.toFixed(2) + "," + newVertex[i].z.toFixed(2), 10, i * 10 + 120);
 
         let tmpLen = Math.sqrt(
             (camera.coord.x - newVertex[i].x) ** 2 +
@@ -236,7 +237,7 @@ function mainLoop() {
 
         con.fillStyle = "black";
 
-        con.fillText(d2Vertex[i].x + "," + d2Vertex[i].y, 10, i * 10 + 20);
+        con.fillText(d2Vertex[i].x.toFixed(2) + "," + d2Vertex[i].y.toFixed(2), 10, i * 10 + 20);
 
         con.beginPath();
         con.arc(d2Vertex[i].x, d2Vertex[i].y, 1000 / length, 0, 360, false);
