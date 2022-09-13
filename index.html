@@ -44,23 +44,76 @@
 
                 this.normalVector = {
                     length: 100,
-                    st: {
-                        x: this.coord.x,
-                        y: this.coord.y,
-                        z: this.coord.z,
-                    },
-                    ed: {
-                        x: 0,
-                        y: 0,
-                        z: 0,
-                    },
-                    vector: {
-                        x: 0,
-                        y: 0,
-                        z: 0,
-                    },
+                    st: {},
+                    ed: {},
+                    vector: {},
                 };
 
+                this.planeEquation = {};
+
+                this.speed = 2;
+
+            }
+            update() {
+                if (key[68]) { // 右
+                    // this.coord.x += 2;
+                    this.x += cos(this.rotate.z + 90) * this.speed;
+                    this.y += sin(this.rotate.z + 90) * this.speed;
+                }
+                if (key[65]) { // 左
+                    // this.coord.x -= 2;
+                    this.x -= cos(this.rotate.z + 90) * this.speed;
+                    this.y -= sin(this.rotate.z + 90) * this.speed;
+                }
+                if (key[87]) { // 前
+                    // this.coord.y += 2;
+                    this.x += cos(this.rotate.z + 0) * this.speed;
+                    this.y += sin(this.rotate.z + 0) * this.speed;
+                }
+                if (key[83]) { // 後ろ
+                    // this.coord.y -= 2;
+                    this.x -= cos(this.rotate.z + 0) * this.speed;
+                    this.y -= sin(this.rotate.z + 0) * this.speed;
+                }
+                if (key[32]) { // 上
+                    this.coord.z += this.speed;
+                }
+                if (key[16]) { // 下
+                    this.coord.z -= this.speed;
+                }
+
+                if (key[37]) this.rotate.z -= 2; // 左
+                if (key[39]) this.rotate.z += 2; // 右
+                if (key[38]) this.rotate.x -= 2; // 上
+                if (key[40]) this.rotate.x += 2; // 下
+
+                this.normalVector.st = {
+                    x: this.coord.x,
+                    y: this.coord.y,
+                    z: this.coord.z,
+                };
+
+                const tmpZ1 = sin(this.rotate.x) * this.normalVector.length;
+                const tmpY1 = cos(this.rotate.x) * this.normalVector.length;
+                const tmpY2 = cos(this.rotate.z) * tmpY1;
+                const tmpX1 = sin(this.rotate.z) * tmpY1;
+
+                this.normalVector.ed = {
+                    x: tmpX1 + this.normalVector.st.x,
+                    y: tmpY2 + this.normalVector.st.y,
+                    z: tmpZ1 + this.normalVector.st.z,
+                };
+
+                this.normalVector.vector = {
+                    x: this.normalVector.ed.x - this.normalVector.st.x,
+                    y: this.normalVector.ed.y - this.normalVector.st.y,
+                    z: this.normalVector.ed.z - this.normalVector.st.z,
+                };
+                // console.log(this.normalVector.vector.x);
+                // console.log(this.normalVector.vector.y);
+                // console.log(this.normalVector.vector.z);
+
+                // 平面の方程式 ax+by+cz+d=0
                 this.planeEquation = {
                     a: this.normalVector.vector.x,
                     b: this.normalVector.vector.y,
@@ -69,37 +122,6 @@
                         this.normalVector.vector.y * -this.coord.y +
                         this.normalVector.vector.z * -this.coord.z,
                 };
-
-            }
-            update() {
-                if (key[37]) this.coord.x -= 2;
-                if (key[39]) this.coord.x += 2;
-                if (key[40]) this.coord.y -= 2;
-                if (key[38]) this.coord.y += 2;
-
-                this.normalVector.st.x = this.coord.x;
-                this.normalVector.st.y = this.coord.y;
-                this.normalVector.st.z = this.coord.z;
-
-                this.normalVector.ed.y = cos(this.rotate.x) * this.normalVector.length;
-                this.normalVector.ed.z = sin(this.rotate.x) * this.normalVector.length;
-                this.normalVector.ed.x = sin(this.rotate.z) * this.normalVector.length;
-
-                this.normalVector.vector.x = this.normalVector.ed.x - this.normalVector.st.x;
-                this.normalVector.vector.y = this.normalVector.ed.y - this.normalVector.st.y;
-                this.normalVector.vector.z = this.normalVector.ed.z - this.normalVector.st.z;
-
-                // console.log(this.normalVector.vector.x);
-                // console.log(this.normalVector.vector.y);
-                // console.log(this.normalVector.vector.z);
-
-                this.planeEquation.a = this.normalVector.vector.x;
-                this.planeEquation.b = this.normalVector.vector.y;
-                this.planeEquation.c = this.normalVector.vector.z;
-                this.planeEquation.d =
-                    this.normalVector.vector.x * -this.coord.x +
-                    this.normalVector.vector.y * -this.coord.y +
-                    this.normalVector.vector.z * -this.coord.z;
             }
         }
 
@@ -124,6 +146,11 @@
         function tan(theta) {
             return (Math.tan(Math.PI / 180 * theta));
         }
+
+        function atan(tan) {
+            return Math.atan(tan) / Math.PI * 180;
+        }
+
 
         function mainLoop() {
             con.clearRect(0, 0, can.width, can.height);
@@ -162,33 +189,58 @@
                     (camera.coord.z - newVertex[i].z) ** 2
                 );
 
-                tmpVtx = newVertex;
+                tmpVtx = newVertex[i];
 
-                let len = {
-                    x: Math.sqrt((camera.coord.y - newVertex[i].y) ** 2 + (camera.coord.z - newVertex[i].z) ** 2),
-                    y: Math.sqrt((camera.coord.x - newVertex[i].x) ** 2 + (camera.coord.z - newVertex[i].z) ** 2),
-                    z: Math.sqrt((camera.coord.x - newVertex[i].x) ** 2 + (camera.coord.y - newVertex[i].y) ** 2),
-                };
+                let dif = {};
+                dif.x = tmpVtx.x - camera.coord.x;
+                dif.y = tmpVtx.y - camera.coord.y;
+                dif.z = tmpVtx.z - camera.coord.z;
 
-                let tmpRotate = {
-                    x: Math.atan(len.z / len.y) / Math.PI * 180,
-                    z: Math.atan(len.x / len.y) / Math.PI * 180,
-                };
+                let len = {};
+                len.x = Math.sqrt(dif.y ** 2 + dif.z ** 2);
+                len.y = Math.sqrt(dif.x ** 2 + dif.z ** 2);
+                len.z = Math.sqrt(dif.x ** 2 + dif.y ** 2);
 
-                let tmpNewRotate = {
-                    x: tmpRotate.x - camera.rotate.x,
-                    z: tmpRotate.z - camera.rotate.z,
-                };
+                let tmpRotate = {};
+                let tmpNewRotate = {};
+
+                tmpRotate.z = atan(dif.x / dif.y);
+                if (dif.y < 0) tmpRotate.z += 180;
+                tmpNewRotate.z = tmpRotate.z - camera.rotate.z;
 
                 tmpVtx.x = camera.coord.x + sin(tmpNewRotate.z) * len.z;
                 tmpVtx.y = camera.coord.y + cos(tmpNewRotate.z) * len.z;
+
+                dif.x = tmpVtx.x - camera.coord.x;
+                dif.y = tmpVtx.y - camera.coord.y;
+                dif.z = tmpVtx.z - camera.coord.z;
+
+                len.x = Math.sqrt(dif.y ** 2 + dif.z ** 2);
+                len.y = Math.sqrt(dif.x ** 2 + dif.z ** 2);
+                len.z = Math.sqrt(dif.x ** 2 + dif.y ** 2);
+
+                tmpRotate.x = atan(dif.z / dif.y);
+                if (dif.y < 0) tmpRotate.x += 180;
+                tmpNewRotate.x = tmpRotate.x - camera.rotate.x;
+
+                // const tmpZ1 = sin(tmpNewRotate.x) * tmpLen;
+                // const tmpY1 = cos(tmpNewRotate.x) * tmpLen;
+                // const tmpY2 = cos(tmpNewRotate.z) * tmpY1;
+                // const tmpX1 = sin(tmpNewRotate.z) * tmpY1;
+
+                // tmpVtx = {
+                //     x: tmpX1 + camera.coord.x,
+                //     y: tmpY2 + camera.coord.y,
+                //     z: tmpZ1 + camera.coord.z,
+                // };
+
 
                 tmpVtx.y = camera.coord.y + cos(tmpNewRotate.x) * len.x;
                 tmpVtx.z = camera.coord.z + sin(tmpNewRotate.x) * len.x;
 
                 d2Vertex[i] = {
                     x: tmpVtx.x + can.width / 2,
-                    y: tmpVtx.z + can.height / 2,
+                    y: can.height - (tmpVtx.z + can.height / 2),
                 };
 
                 con.fillStyle = "black";
@@ -202,6 +254,8 @@
 
             }
 
+
+            con.fillText(camera.rotate.x + "," + camera.rotate.z, 10, 280);
         }
 
         setInterval(mainLoop, 1000 / 60);
