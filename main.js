@@ -84,8 +84,8 @@ class Camera {
 
         if (key[37]) this.rotate.z -= 2; // 左
         if (key[39]) this.rotate.z += 2; // 右
-        if (key[38]) this.rotate.x -= 2; // 上
-        if (key[40]) this.rotate.x += 2; // 下
+        if (key[38]) this.rotate.x += 2; // 上
+        if (key[40]) this.rotate.x -= 2; // 下
 
         // 法線ベクトル
         // 始点
@@ -223,8 +223,10 @@ function mainLoop() {
         if (dif.y < 0) tmpRotate.z += 180;
         tmpNewRotate.z = tmpRotate.z - camera.rotate.z;
 
-        tmpVtx.x = camera.coord.x + sin(tmpNewRotate.z) * len.z;
-        tmpVtx.y = camera.coord.y + cos(tmpNewRotate.z) * len.z;
+        // tmpVtx.x = camera.coord.x + sin(tmpNewRotate.z) * len.z;
+        // tmpVtx.y = camera.coord.y + cos(tmpNewRotate.z) * len.z;
+        tmpVtx.x = sin(tmpNewRotate.z) * len.z;
+        tmpVtx.y = cos(tmpNewRotate.z) * len.z;
 
         dif.x = tmpVtx.x - camera.coord.x;
         dif.y = tmpVtx.y - camera.coord.y;
@@ -250,8 +252,10 @@ function mainLoop() {
         // };
 
 
-        tmpVtx.y = camera.coord.y + cos(tmpNewRotate.x) * len.x;
-        tmpVtx.z = camera.coord.z + sin(tmpNewRotate.x) * len.x;
+        // tmpVtx.y = camera.coord.y + cos(tmpNewRotate.x) * len.x;
+        // tmpVtx.z = camera.coord.z + sin(tmpNewRotate.x) * len.x;
+        tmpVtx.y = cos(tmpNewRotate.x) * len.x;
+        tmpVtx.z = sin(tmpNewRotate.x) * len.x;
 
         d2Vertex[i] = {
             x: tmpVtx.x + can.width / 2,
