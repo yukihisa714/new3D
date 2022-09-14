@@ -113,9 +113,6 @@ class Camera {
             y: this.normalVector.ed.y - this.normalVector.st.y,
             z: this.normalVector.ed.z - this.normalVector.st.z,
         };
-        // console.log(this.normalVector.vector.x);
-        // console.log(this.normalVector.vector.y);
-        // console.log(this.normalVector.vector.z);
 
         // 平面の方程式 ax+by+cz+d=0
         this.planeEquation = {
@@ -156,12 +153,7 @@ function atan(tan) {
     return Math.atan(tan) / Math.PI * 180;
 }
 
-/**
- * 三次元上の2点間の距離を計算する関数
- * @param {Object} pos1 // x, y, z
- * @param {object} pos2 // x, y, z
- * @returns {Number} // 距離
- */
+// 三次元上の二点間の距離を計算する関数
 function calc3dLen(pos1, pos2) {
     return Math.sqrt((pos1.x - pos2.x) ** 2 + (pos1.y + pos2.y) ** 2 + (pos1.z + pos2.z) ** 2);
 }
@@ -198,33 +190,27 @@ function mainLoop() {
 
         con.fillText(newVertex[i].x.toFixed(2) + ", " + newVertex[i].y.toFixed(2) + ", " + newVertex[i].z.toFixed(2), 10, i * 10 + 120);
 
-        let tmpLen = Math.sqrt(
-            (camera.coord.x - newVertex[i].x) ** 2 +
-            (camera.coord.y - newVertex[i].y) ** 2 +
-            (camera.coord.z - newVertex[i].z) ** 2
-        );
-
         let tmpVtx = newVertex[i];
-
-        let dif = {};
-        dif.x = tmpVtx.x - camera.coord.x;
-        dif.y = tmpVtx.y - camera.coord.y;
-        dif.z = tmpVtx.z - camera.coord.z;
-
-        let len = {};
-        len.x = Math.sqrt(dif.y ** 2 + dif.z ** 2);
-        len.y = Math.sqrt(dif.x ** 2 + dif.z ** 2);
-        len.z = Math.sqrt(dif.x ** 2 + dif.y ** 2);
 
         let tmpRotate = {};
         let tmpNewRotate = {};
+
+        let dif = {
+            x: tmpVtx.x - camera.coord.x,
+            y: tmpVtx.y - camera.coord.y,
+            z: tmpVtx.z - camera.coord.z,
+        };
+
+        let len = {
+            x: Math.sqrt(dif.y ** 2 + dif.z ** 2),
+            y: Math.sqrt(dif.x ** 2 + dif.z ** 2),
+            z: Math.sqrt(dif.x ** 2 + dif.y ** 2),
+        };
 
         tmpRotate.z = atan(dif.x / dif.y);
         if (dif.y < 0) tmpRotate.z += 180;
         tmpNewRotate.z = tmpRotate.z - camera.rotate.z;
 
-        // tmpVtx.x = camera.coord.x + sin(tmpNewRotate.z) * len.z;
-        // tmpVtx.y = camera.coord.y + cos(tmpNewRotate.z) * len.z;
         tmpVtx.x = sin(tmpNewRotate.z) * len.z;
         tmpVtx.y = cos(tmpNewRotate.z) * len.z;
 
@@ -240,22 +226,9 @@ function mainLoop() {
         if (dif.y < 0) tmpRotate.x += 180;
         tmpNewRotate.x = tmpRotate.x - camera.rotate.x;
 
-        // const tmpZ1 = sin(tmpNewRotate.x) * tmpLen;
-        // const tmpY1 = cos(tmpNewRotate.x) * tmpLen;
-        // const tmpY2 = cos(tmpNewRotate.z) * tmpY1;
-        // const tmpX1 = sin(tmpNewRotate.z) * tmpY1;
-
-        // tmpVtx = {
-        //     x: tmpX1 + camera.coord.x,
-        //     y: tmpY2 + camera.coord.y,
-        //     z: tmpZ1 + camera.coord.z,
-        // };
-
-
-        // tmpVtx.y = camera.coord.y + cos(tmpNewRotate.x) * len.x;
-        // tmpVtx.z = camera.coord.z + sin(tmpNewRotate.x) * len.x;
-        tmpVtx.y = cos(tmpNewRotate.x) * len.x;
         tmpVtx.z = sin(tmpNewRotate.x) * len.x;
+        tmpVtx.y = cos(tmpNewRotate.x) * len.x;
+
 
         d2Vertex[i] = {
             x: tmpVtx.x + can.width / 2,
@@ -268,7 +241,7 @@ function mainLoop() {
 
 
         con.beginPath();
-        con.arc(d2Vertex[i].x, d2Vertex[i].y, 1000 / length, 0, 360, false);
+        con.arc(d2Vertex[i].x, d2Vertex[i].y, 5, 0, 360, false);
         con.fillText(i, d2Vertex[i].x + 5, d2Vertex[i].y + 5);
         con.fill();
 
