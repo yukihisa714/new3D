@@ -49,21 +49,31 @@ class Camera {
 
     }
     update() {
-        if (key[68]) { // 右
-            this.coord.y += cos(this.rotate.z + 90) * this.speed;
-            this.coord.x += sin(this.rotate.z + 90) * this.speed;
-        }
-        if (key[65]) { // 左
-            this.coord.y -= cos(this.rotate.z + 90) * this.speed;
-            this.coord.x -= sin(this.rotate.z + 90) * this.speed;
-        }
         if (key[87]) { // 前
-            this.coord.y += cos(this.rotate.z + 0) * this.speed;
             this.coord.x += sin(this.rotate.z + 0) * this.speed;
+            this.coord.y += cos(this.rotate.z + 0) * this.speed;
         }
         if (key[83]) { // 後ろ
-            this.coord.y -= cos(this.rotate.z + 0) * this.speed;
             this.coord.x -= sin(this.rotate.z + 0) * this.speed;
+            this.coord.y -= cos(this.rotate.z + 0) * this.speed;
+        }
+        if (key[68]) { // 右
+            if (this.rotate.z === 0) {
+                this.coord.x += this.speed;
+            }
+            else {
+                this.coord.x += sin(this.rotate.z + 90) * this.speed;
+                this.coord.y += cos(this.rotate.z + 90) * this.speed;
+            }
+        }
+        if (key[65]) { // 左
+            if (this.rotate.z === 0) {
+                this.coord.x -= this.speed;
+            }
+            else {
+                this.coord.x += sin(this.rotate.z - 90) * this.speed;
+                this.coord.y += cos(this.rotate.z - 90) * this.speed;
+            }
         }
         if (key[32]) { // 上
             this.coord.z += this.speed;
@@ -78,6 +88,7 @@ class Camera {
         if (key[40]) this.rotate.x += 2; // 下
 
         // 法線ベクトル
+        // 始点
         this.normalVector.st = {
             x: this.coord.x,
             y: this.coord.y,
@@ -89,12 +100,14 @@ class Camera {
         const tmpY2 = cos(this.rotate.z) * tmpY1;
         const tmpX1 = sin(this.rotate.z) * tmpY1;
 
+        // 終点
         this.normalVector.ed = {
             x: tmpX1 + this.normalVector.st.x,
             y: tmpY2 + this.normalVector.st.y,
             z: tmpZ1 + this.normalVector.st.z,
         };
 
+        // ベクトル
         this.normalVector.vector = {
             x: this.normalVector.ed.x - this.normalVector.st.x,
             y: this.normalVector.ed.y - this.normalVector.st.y,
@@ -143,13 +156,25 @@ function atan(tan) {
     return Math.atan(tan) / Math.PI * 180;
 }
 
+/**
+ * 三次元上の2点間の距離を計算する関数
+ * @param {Object} pos1 // x, y, z
+ * @param {object} pos2 // x, y, z
+ * @returns {Number} // 距離
+ */
+function calc3dLen(pos1, pos2) {
+    return Math.sqrt((pos1.x - pos2.x) ** 2 + (pos1.y + pos2.y) ** 2 + (pos1.z + pos2.z) ** 2);
+}
+
 
 function mainLoop() {
     con.clearRect(0, 0, can.width, can.height);
 
     camera.update();
 
+    // カメラの法線ベクトル
     const camVector = camera.normalVector.vector;
+    // カメラ平面の方程式
     const planeEq = camera.planeEquation;
 
     con.fillText(camVector.x + "," + camVector.y + "," + camVector.z, 10, 250);
@@ -160,20 +185,18 @@ function mainLoop() {
 
     for (let i = 0; i < glovalVertex.length; i++) {
         const point = glovalVertex[i];
-        const length = Math.sqrt(
-            (camera.coord.x - point.x) ** 2 +
-            (camera.coord.y - point.y) ** 2 +
-            (camera.coord.z - point.z) ** 2
-        );
+        const length = calc3dLen(camera.coord, point);
         const t = -(planeEq.a * point.x + planeEq.b * point.y + planeEq.c * point.z + planeEq.d)
             / (planeEq.a * camVector.x + planeEq.b * camVector.y + planeEq.c * camVector.z);
+
+        // カメラ平面との交点
         newVertex[i] = {
             x: camVector.x * t + point.x,
             y: camVector.y * t + point.y,
             z: camVector.z * t + point.z,
         };
 
-        con.fillText(newVertex[i].x.toFixed(2) + "," + newVertex[i].y.toFixed(2) + "," + newVertex[i].z.toFixed(2), 10, i * 10 + 120);
+        con.fillText(newVertex[i].x.toFixed(2) + ", " + newVertex[i].y.toFixed(2) + ", " + newVertex[i].z.toFixed(2), 10, i * 10 + 120);
 
         let tmpLen = Math.sqrt(
             (camera.coord.x - newVertex[i].x) ** 2 +
@@ -239,6 +262,7 @@ function mainLoop() {
 
         con.fillText(d2Vertex[i].x.toFixed(2) + "," + d2Vertex[i].y.toFixed(2), 10, i * 10 + 20);
 
+
         con.beginPath();
         con.arc(d2Vertex[i].x, d2Vertex[i].y, 1000 / length, 0, 360, false);
         con.fillText(i, d2Vertex[i].x + 5, d2Vertex[i].y + 5);
@@ -246,8 +270,8 @@ function mainLoop() {
 
     }
 
-
-    con.fillText(camera.rotate.x + "," + camera.rotate.z, 10, 280);
+    con.fillText(camera.coord.x + ", " + camera.coord.y + ", " + camera.coord.z, 10, 270);
+    con.fillText(camera.rotate.x + ", " + camera.rotate.z, 10, 280);
 }
 
 setInterval(mainLoop, 1000 / 60);
