@@ -1,3 +1,8 @@
+import { Camera } from "./camera.js";
+import { key, sin, cos, tan, atan, calc3dLen } from "./utility.js";
+import { Point } from "./shape.js";
+
+
 const can = document.createElement("canvas");
 const con = can.getContext("2d");
 can.width = 300;
@@ -6,158 +11,18 @@ can.style.background = "gray";
 document.body.appendChild(can);
 
 let glovalVertex = [
-    { x: 100, y: 100, z: 200 },
-    { x: 200, y: 100, z: 200 },
-    { x: 200, y: 100, z: 100 },
-    { x: 100, y: 100, z: 100 },
-    { x: 100, y: 200, z: 200 },
-    { x: 200, y: 200, z: 200 },
-    { x: 200, y: 200, z: 100 },
-    { x: 100, y: 200, z: 100 },
-    { x: 0, y: -200, z: 0 },
+    new Point(100, 100, 200),
+    new Point(200, 100, 200),
+    new Point(200, 100, 100),
+    new Point(100, 100, 100),
+    new Point(100, 200, 200),
+    new Point(200, 200, 200),
+    new Point(200, 200, 100),
+    new Point(100, 200, 100),
+    new Point(0, -200, 0),
 ];
 
-// カメラクラス
-class Camera {
-    constructor() {
-
-        // カメラの座標
-        this.coord = {
-            x: 0,
-            y: 0,
-            z: 0,
-        };
-
-        // カメラの回転
-        this.rotate = {
-            x: 0,
-            z: 0,
-        };
-
-        // 法線ベクトル
-        this.normalVector = {
-            length: 100, // 長さ
-            st: {}, // 始点
-            ed: {}, // 終点
-            vector: {}, // ベクトル
-        };
-
-        // カメラの平面の方程式
-        this.planeEquation = {};
-
-        // カメラの移動速度
-        this.speed = 2;
-
-    }
-    update() {
-        if (key[87]) { // 前
-            this.coord.x += sin(this.rotate.z + 0) * this.speed;
-            this.coord.y += cos(this.rotate.z + 0) * this.speed;
-        }
-        if (key[83]) { // 後ろ
-            this.coord.x -= sin(this.rotate.z + 0) * this.speed;
-            this.coord.y -= cos(this.rotate.z + 0) * this.speed;
-        }
-        if (key[68]) { // 右
-            if (this.rotate.z === 0) {
-                this.coord.x += this.speed;
-            }
-            else {
-                this.coord.x += sin(this.rotate.z + 90) * this.speed;
-                this.coord.y += cos(this.rotate.z + 90) * this.speed;
-            }
-        }
-        if (key[65]) { // 左
-            if (this.rotate.z === 0) {
-                this.coord.x -= this.speed;
-            }
-            else {
-                this.coord.x += sin(this.rotate.z - 90) * this.speed;
-                this.coord.y += cos(this.rotate.z - 90) * this.speed;
-            }
-        }
-        if (key[32]) { // 上
-            this.coord.z += this.speed;
-        }
-        if (key[16]) { // 下
-            this.coord.z -= this.speed;
-        }
-
-        if (key[37]) this.rotate.z -= 2; // 左
-        if (key[39]) this.rotate.z += 2; // 右
-        if (key[38]) this.rotate.x += 2; // 上
-        if (key[40]) this.rotate.x -= 2; // 下
-
-        // 法線ベクトル
-        // 始点
-        this.normalVector.st = {
-            x: this.coord.x,
-            y: this.coord.y,
-            z: this.coord.z,
-        };
-
-        const tmpZ1 = sin(this.rotate.x) * this.normalVector.length;
-        const tmpY1 = cos(this.rotate.x) * this.normalVector.length;
-        const tmpY2 = cos(this.rotate.z) * tmpY1;
-        const tmpX1 = sin(this.rotate.z) * tmpY1;
-
-        // 終点
-        this.normalVector.ed = {
-            x: tmpX1 + this.normalVector.st.x,
-            y: tmpY2 + this.normalVector.st.y,
-            z: tmpZ1 + this.normalVector.st.z,
-        };
-
-        // ベクトル
-        this.normalVector.vector = {
-            x: this.normalVector.ed.x - this.normalVector.st.x,
-            y: this.normalVector.ed.y - this.normalVector.st.y,
-            z: this.normalVector.ed.z - this.normalVector.st.z,
-        };
-
-        // 平面の方程式 ax+by+cz+d=0
-        this.planeEquation = {
-            a: this.normalVector.vector.x,
-            b: this.normalVector.vector.y,
-            c: this.normalVector.vector.z,
-            d: this.normalVector.vector.x * -this.coord.x +
-                this.normalVector.vector.y * -this.coord.y +
-                this.normalVector.vector.z * -this.coord.z,
-        };
-    }
-}
-
 let camera = new Camera();
-
-// camera.update();
-
-let key = [];
-document.onkeydown = (e) => {
-    key[e.keyCode] = true;
-    // console.log(e.key);
-}
-document.onkeyup = (e) => {
-    key[e.keyCode] = false;
-}
-
-function sin(theta) {
-    return (Math.sin(Math.PI / 180 * theta));
-}
-function cos(theta) {
-    return (Math.cos(Math.PI / 180 * theta));
-}
-function tan(theta) {
-    return (Math.tan(Math.PI / 180 * theta));
-}
-
-function atan(tan) {
-    return Math.atan(tan) / Math.PI * 180;
-}
-
-// 三次元上の二点間の距離を計算する関数
-function calc3dLen(pos1, pos2) {
-    return Math.sqrt((pos1.x - pos2.x) ** 2 + (pos1.y + pos2.y) ** 2 + (pos1.z + pos2.z) ** 2);
-}
 
 
 function mainLoop() {
