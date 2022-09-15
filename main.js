@@ -1,6 +1,6 @@
 import { Camera } from "./camera.js";
 import { key, sin, cos, tan, atan, calc3dLen } from "./utility.js";
-import { Point } from "./shape.js";
+import { Point, Vector } from "./shape.js";
 
 
 const can = document.createElement("canvas");
@@ -38,7 +38,7 @@ function mainLoop() {
     con.fillText(camVector.x + "," + camVector.y + "," + camVector.z, 10, 250);
 
 
-    let newVertex = [];
+    let intersectionVtx = [];
     let d2Vertex = [];
 
     for (let i = 0; i < glovalVertex.length; i++) {
@@ -48,15 +48,24 @@ function mainLoop() {
             / (planeEq.a * camVector.x + planeEq.b * camVector.y + planeEq.c * camVector.z);
 
         // カメラ平面との交点
-        newVertex[i] = new Point(
+        intersectionVtx[i] = new Point(
             camVector.x * t + point.x,
             camVector.y * t + point.y,
             camVector.z * t + point.z,
         );
 
-        con.fillText(newVertex[i].x.toFixed(2) + ", " + newVertex[i].y.toFixed(2) + ", " + newVertex[i].z.toFixed(2), 10, i * 10 + 120);
+        con.fillText(intersectionVtx[i].x.toFixed(2) + ", " + intersectionVtx[i].y.toFixed(2) + ", " + intersectionVtx[i].z.toFixed(2), 10, i * 10 + 120);
 
-        let tmpVtx = newVertex[i];
+        let camToIntVector = new Vector(intersectionVtx, point);
+
+        // 点がカメラの後ろにあるときに描画しない
+        if (Math.sign(camVector.x) === Math.sign(camToIntVector.calcDisplacement().x)) {
+            return;
+        }
+
+        // カメラ平面との交点を二次元に変換
+
+        let tmpVtx = intersectionVtx[i];
 
         let tmpRotate = {};
         let tmpNewRotate = {};
@@ -96,6 +105,7 @@ function mainLoop() {
         tmpVtx.y = cos(tmpNewRotate.x) * len.x;
 
 
+        // 二次元座標に格納
         d2Vertex[i] = {
             x: tmpVtx.x * 200 / length + can.width / 2,
             y: can.height - (tmpVtx.z * 200 / length + can.height / 2),
