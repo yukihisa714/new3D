@@ -31,14 +31,10 @@ export class Vector {
     constructor(st, ed) {
         this.st = st;
         this.ed = ed;
-    }
-
-    calcDisplacement() {
-        // ベクトル
-        return {
+        this.vector = {
             x: this.ed.x - this.st.x,
             y: this.ed.y - this.st.y,
             z: this.ed.z - this.st.z,
-        }
+        };
     }
 }

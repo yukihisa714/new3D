@@ -92,7 +92,7 @@ export class Camera {
         let displacement = new Vector(this.normalVector.st, this.normalVector.ed);
 
         // ベクトル
-        this.normalVector.vector = displacement.calcDisplacement();
+        this.normalVector.vector = displacement.vector;
 
         // 平面の方程式 ax+by+cz+d=0
         this.planeEquation = {

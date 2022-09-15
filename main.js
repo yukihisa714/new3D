@@ -56,10 +56,10 @@ function mainLoop() {
 
         con.fillText(intersectionVtx[i].x.toFixed(2) + ", " + intersectionVtx[i].y.toFixed(2) + ", " + intersectionVtx[i].z.toFixed(2), 10, i * 10 + 120);
 
-        let camToIntVector = new Vector(intersectionVtx, point);
+        const camToIntVector = new Vector(intersectionVtx, point);
 
         // 点がカメラの後ろにあるときに描画しない
-        if (Math.sign(camVector.x) === Math.sign(camToIntVector.calcDisplacement().x)) {
+        if (Math.sign(camVector.x) === Math.sign(camToIntVector.x)) {
             return;
         }
 
