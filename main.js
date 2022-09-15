@@ -5,20 +5,20 @@ import { Point } from "./shape.js";
 
 const can = document.createElement("canvas");
 const con = can.getContext("2d");
-can.width = 300;
+can.width = 400;
 can.height = 300;
 can.style.background = "gray";
 document.body.appendChild(can);
 
 let glovalVertex = [
-    new Point(100, 100, 200),
+    new Point(-200, 100, 200),
     new Point(200, 100, 200),
-    new Point(200, 100, 100),
-    new Point(100, 100, 100),
-    new Point(100, 200, 200),
-    new Point(200, 200, 200),
-    new Point(200, 200, 100),
-    new Point(100, 200, 100),
+    new Point(200, 100, -200),
+    new Point(-200, 100, -200),
+    new Point(-200, 500, 200),
+    new Point(200, 500, 200),
+    new Point(200, 500, -200),
+    new Point(-200, 500, -200),
     new Point(0, -200, 0),
 ];
 
@@ -48,11 +48,11 @@ function mainLoop() {
             / (planeEq.a * camVector.x + planeEq.b * camVector.y + planeEq.c * camVector.z);
 
         // カメラ平面との交点
-        newVertex[i] = {
-            x: camVector.x * t + point.x,
-            y: camVector.y * t + point.y,
-            z: camVector.z * t + point.z,
-        };
+        newVertex[i] = new Point(
+            camVector.x * t + point.x,
+            camVector.y * t + point.y,
+            camVector.z * t + point.z,
+        );
 
         con.fillText(newVertex[i].x.toFixed(2) + ", " + newVertex[i].y.toFixed(2) + ", " + newVertex[i].z.toFixed(2), 10, i * 10 + 120);
 
@@ -97,8 +97,8 @@ function mainLoop() {
 
 
         d2Vertex[i] = {
-            x: tmpVtx.x + can.width / 2,
-            y: can.height - (tmpVtx.z + can.height / 2),
+            x: tmpVtx.x * 200 / length + can.width / 2,
+            y: can.height - (tmpVtx.z * 200 / length + can.height / 2),
         };
 
         con.fillStyle = "black";
