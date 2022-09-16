@@ -56,11 +56,13 @@ function mainLoop() {
 
         con.fillText(intersectionVtx[i].x.toFixed(2) + ", " + intersectionVtx[i].y.toFixed(2) + ", " + intersectionVtx[i].z.toFixed(2), 10, i * 10 + 120);
 
-        const camToIntVector = new Vector(intersectionVtx, point);
+        // 交点から点までのベクトル
+        const intToPointVector = new Vector(intersectionVtx, point);
 
         // 点がカメラの後ろにあるときに描画しない
-        if (Math.sign(camVector.x) === Math.sign(camToIntVector.x)) {
-            return;
+        if (Math.sign(camVector.x) === Math.sign(intToPointVector.x)) {
+            // continue;
+            console.log(i);
         }
 
         // カメラ平面との交点を二次元に変換
