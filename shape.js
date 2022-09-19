@@ -21,6 +21,32 @@ export class Point {
     }
 }
 
+export class Line {
+    /**
+     * 
+     * @param {Point} st 
+     * @param {PointF} ed 
+     */
+    constructor(st, ed) {
+        this.st = st;
+        this.ed = ed;
+        this.length = st.getDist(ed);
+    }
+}
+
+export class Triangle {
+    /**
+     * 
+     * @param {Point} p1 
+     * @param {Point} p2 
+     * @param {Point} p3 
+     */
+    constructor(p1, p2, p3) {
+        this.p1 = p1;
+        this.p2 = p2;
+        this.p3 = p3;
+    }
+}
 
 export class Vector {
     /**
