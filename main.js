@@ -5,8 +5,8 @@ import { Point, Vector, Line } from "./shape.js";
 
 const can = document.createElement("canvas");
 const con = can.getContext("2d");
-can.width = 360;
-can.height = 270;
+can.width = 600;
+can.height = 450;
 can.style.background = "gray";
 document.body.appendChild(can);
 
@@ -26,13 +26,19 @@ let lines = [
     { point1: 0, point2: 1 },
     { point1: 1, point2: 2 },
     { point1: 2, point2: 3 },
-    { point1: 3, point2: 4 },
+    { point1: 2, point2: 6 },
+    { point1: 0, point2: 3 },
+    { point1: 0, point2: 4 },
+    { point1: 1, point2: 5 },
     { point1: 4, point2: 5 },
+    { point1: 3, point2: 7 },
+    { point1: 4, point2: 7 },
     { point1: 5, point2: 6 },
     { point1: 6, point2: 7 },
-    { point1: 7, point2: 8 },
-    { point1: 8, point2: 9 },
-
+    { point1: 0, point2: 8 },
+    { point1: 1, point2: 8 },
+    { point1: 2, point2: 8 },
+    { point1: 3, point2: 8 },
 ];
 
 let camera = new Camera();
@@ -57,9 +63,9 @@ function mainLoop() {
     // カメラ平面の方程式
     const planeEq = camera.planeEquation;
 
-    con.fillText("cam: " + camVector.x.toFixed(2) +
-        "," + camVector.y.toFixed(2) +
-        "," + camVector.z.toFixed(2),
+    con.fillText("cam: " + camVector.x.toFixed(0) +
+        "," + camVector.y.toFixed(0) +
+        "," + camVector.z.toFixed(0),
         10, 250);
 
 
@@ -80,7 +86,7 @@ function mainLoop() {
             camVector.z * t + point.z,
         );
 
-        con.fillText(intersectionVtx[i].x.toFixed(2) + ", " + intersectionVtx[i].y.toFixed(2) + ", " + intersectionVtx[i].z.toFixed(2), 10, i * 10 + 120);
+        con.fillText(intersectionVtx[i].x.toFixed(0) + ", " + intersectionVtx[i].y.toFixed(0) + ", " + intersectionVtx[i].z.toFixed(0), 10, i * 10 + 120);
 
         // 交点から点までのベクトル
         const intToPointVector = new Vector(intersectionVtx[i], point);
@@ -140,7 +146,7 @@ function mainLoop() {
 
         con.fillStyle = "black";
 
-        con.fillText(d2Vertex[i].x.toFixed(2) + "," + d2Vertex[i].y.toFixed(2), 10, i * 10 + 20);
+        con.fillText(d2Vertex[i].x.toFixed(0) + "," + d2Vertex[i].y.toFixed(0), 10, i * 10 + 20);
 
 
         con.beginPath();
@@ -148,9 +154,9 @@ function mainLoop() {
         con.fillText(i, d2Vertex[i].x + 5, d2Vertex[i].y + 5);
         con.fill();
 
-        con.fillText("Vector→" + intToPointVector.vector.x.toFixed(2) +
-            "," + intToPointVector.vector.y.toFixed(2) +
-            "," + intToPointVector.vector.z.toFixed(2),
+        con.fillText("Vector→" + intToPointVector.vector.x.toFixed(0) +
+            "," + intToPointVector.vector.y.toFixed(0) +
+            "," + intToPointVector.vector.z.toFixed(0),
             d2Vertex[i].x + 15, d2Vertex[i].y + 5);
 
 
