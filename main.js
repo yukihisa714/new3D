@@ -24,21 +24,21 @@ let glovalVertex = [
 
 let lines = [
     { point1: 0, point2: 1 },
-    { point1: 1, point2: 2 },
-    { point1: 2, point2: 3 },
-    { point1: 2, point2: 6 },
     { point1: 0, point2: 3 },
     { point1: 0, point2: 4 },
+    { point1: 0, point2: 8 },
+    { point1: 1, point2: 2 },
     { point1: 1, point2: 5 },
-    { point1: 4, point2: 5 },
+    { point1: 1, point2: 8 },
+    { point1: 2, point2: 3 },
+    { point1: 2, point2: 6 },
+    { point1: 2, point2: 8 },
     { point1: 3, point2: 7 },
+    { point1: 3, point2: 8 },
+    { point1: 4, point2: 5 },
     { point1: 4, point2: 7 },
     { point1: 5, point2: 6 },
     { point1: 6, point2: 7 },
-    { point1: 0, point2: 8 },
-    { point1: 1, point2: 8 },
-    { point1: 2, point2: 8 },
-    { point1: 3, point2: 8 },
 ];
 
 let camera = new Camera();
