@@ -25,7 +25,7 @@ export class Line {
     /**
      * 
      * @param {Point} st 
-     * @param {PointF} ed 
+     * @param {Point} ed 
      */
     constructor(st, ed) {
         this.st = st;

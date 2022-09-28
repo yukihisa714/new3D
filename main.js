@@ -1,12 +1,12 @@
 import { Camera } from "./camera.js";
 import { key, sin, cos, tan, atan, calc3dLen } from "./utility.js";
-import { Point, Vector } from "./shape.js";
+import { Point, Vector, Line } from "./shape.js";
 
 
 const can = document.createElement("canvas");
 const con = can.getContext("2d");
-can.width = 400;
-can.height = 300;
+can.width = 360;
+can.height = 270;
 can.style.background = "gray";
 document.body.appendChild(can);
 
@@ -22,8 +22,30 @@ let glovalVertex = [
     new Point(0, -200, 0),
 ];
 
+let lines = [
+    { point1: 0, point2: 1 },
+    { point1: 1, point2: 2 },
+    { point1: 2, point2: 3 },
+    { point1: 3, point2: 4 },
+    { point1: 4, point2: 5 },
+    { point1: 5, point2: 6 },
+    { point1: 6, point2: 7 },
+    { point1: 7, point2: 8 },
+    { point1: 8, point2: 9 },
+
+];
+
 let camera = new Camera();
 
+let frame = 0;
+
+// canvasに線を描画する関数
+function drawLine(pos1, pos2) {
+    con.beginPath()
+    con.lineTo(pos1.x, pos1.y);
+    con.lineTo(pos2.x, pos2.y);
+    con.stroke();
+}
 
 function mainLoop() {
     con.clearRect(0, 0, can.width, can.height);
@@ -35,14 +57,18 @@ function mainLoop() {
     // カメラ平面の方程式
     const planeEq = camera.planeEquation;
 
-    con.fillText(camVector.x + "," + camVector.y + "," + camVector.z, 10, 250);
+    con.fillText("cam: " + camVector.x.toFixed(2) +
+        "," + camVector.y.toFixed(2) +
+        "," + camVector.z.toFixed(2),
+        10, 250);
 
 
     let intersectionVtx = [];
     let d2Vertex = [];
 
     for (let i = 0; i < glovalVertex.length; i++) {
-        const point = glovalVertex[i];
+        const a = glovalVertex[i]
+        const point = new Point(a.x, a.y, a.z);
         const length = calc3dLen(camera.coord, point);
         const t = -(planeEq.a * point.x + planeEq.b * point.y + planeEq.c * point.z + planeEq.d)
             / (planeEq.a * camVector.x + planeEq.b * camVector.y + planeEq.c * camVector.z);
@@ -57,12 +83,11 @@ function mainLoop() {
         con.fillText(intersectionVtx[i].x.toFixed(2) + ", " + intersectionVtx[i].y.toFixed(2) + ", " + intersectionVtx[i].z.toFixed(2), 10, i * 10 + 120);
 
         // 交点から点までのベクトル
-        const intToPointVector = new Vector(intersectionVtx, point);
+        const intToPointVector = new Vector(intersectionVtx[i], point);
 
         // 点がカメラの後ろにあるときに描画しない
-        if (Math.sign(camVector.x) === Math.sign(intToPointVector.x)) {
-            // continue;
-            console.log(i);
+        if (Math.sign(camVector.y) !== Math.sign(intToPointVector.vector.y)) {
+            continue;
         }
 
         // カメラ平面との交点を二次元に変換
@@ -109,7 +134,7 @@ function mainLoop() {
 
         // 二次元座標に格納
         d2Vertex[i] = {
-            x: tmpVtx.x * 200 / length + can.width / 2,
+            x: tmpVtx.x + can.width / 2,
             y: can.height - (tmpVtx.z * 200 / length + can.height / 2),
         };
 
@@ -123,10 +148,24 @@ function mainLoop() {
         con.fillText(i, d2Vertex[i].x + 5, d2Vertex[i].y + 5);
         con.fill();
 
+        con.fillText("Vector→" + intToPointVector.vector.x.toFixed(2) +
+            "," + intToPointVector.vector.y.toFixed(2) +
+            "," + intToPointVector.vector.z.toFixed(2),
+            d2Vertex[i].x + 15, d2Vertex[i].y + 5);
+
+
+
     }
 
     con.fillText(camera.coord.x + ", " + camera.coord.y + ", " + camera.coord.z, 10, 270);
     con.fillText(camera.rotate.x + ", " + camera.rotate.z, 10, 280);
+
+    for (let i = 0; i < lines.length; i++) {
+        con.strokeStyle = "black";
+        drawLine(d2Vertex[lines[i].point1], d2Vertex[lines[i].point2]);
+    }
+
+    frame++;
 }
 
 setInterval(mainLoop, 1000 / 60);

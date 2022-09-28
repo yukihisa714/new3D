@@ -63,10 +63,10 @@ export class Camera {
             this.coord.z -= this.speed;
         }
 
-        if (key[37]) this.rotate.z -= 2; // 左
-        if (key[39]) this.rotate.z += 2; // 右
-        if (key[38]) this.rotate.x += 2; // 上
-        if (key[40]) this.rotate.x -= 2; // 下
+        if (key[37]) this.rotate.z -= 1; // 左
+        if (key[39]) this.rotate.z += 1; // 右
+        if (key[38]) this.rotate.x += 1; // 上
+        if (key[40]) this.rotate.x -= 1; // 下
 
         // 法線ベクトル
         // 始点
