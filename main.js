@@ -135,7 +135,7 @@ function mainLoop() {
         // 二次元座標に格納
         d2Vertex[i] = {
             x: tmpVtx.x + can.width / 2,
-            y: can.height - (tmpVtx.z * 200 / length + can.height / 2),
+            y: can.height - (tmpVtx.z + can.height / 2),
         };
 
         con.fillStyle = "black";
@@ -162,7 +162,9 @@ function mainLoop() {
 
     for (let i = 0; i < lines.length; i++) {
         con.strokeStyle = "black";
-        drawLine(d2Vertex[lines[i].point1], d2Vertex[lines[i].point2]);
+        if (d2Vertex[lines[i].point1] && d2Vertex[lines[i].point2]) {
+            drawLine(d2Vertex[lines[i].point1], d2Vertex[lines[i].point2]);
+        }
     }
 
     frame++;
