@@ -27,6 +27,7 @@ export class Camera {
 
         // カメラの移動速度
         this.speed = 2;
+        this.sensitive = 0.5;
 
     }
     update() {
@@ -63,10 +64,10 @@ export class Camera {
             this.coord.z -= this.speed;
         }
 
-        if (key[37]) this.rotate.z -= 1; // 左
-        if (key[39]) this.rotate.z += 1; // 右
-        if (key[38]) this.rotate.x += 1; // 上
-        if (key[40]) this.rotate.x -= 1; // 下
+        if (key[37]) this.rotate.z -= this.sensitive; // 左
+        if (key[39]) this.rotate.z += this.sensitive; // 右
+        if (key[38]) this.rotate.x += this.sensitive; // 上
+        if (key[40]) this.rotate.x -= this.sensitive; // 下
 
         // 法線ベクトル
         // 始点

@@ -5,8 +5,8 @@ import { Point, Vector, Line } from "./shape.js";
 
 const can = document.createElement("canvas");
 const con = can.getContext("2d");
-can.width = 600;
-can.height = 450;
+can.width = 360;
+can.height = 270;
 can.style.background = "gray";
 document.body.appendChild(can);
 
@@ -91,9 +91,13 @@ function mainLoop() {
         // 交点から点までのベクトル
         const intToPointVector = new Vector(intersectionVtx[i], point);
 
+        // 点が自分の前にあるか後ろにあるか
+        let isPointInFront = true;
+
         // 点がカメラの後ろにあるときに描画しない
         if (Math.sign(camVector.y) !== Math.sign(intToPointVector.vector.y)) {
-            continue;
+            // continue;
+            isPointInFront = false;
         }
 
         // カメラ平面との交点を二次元に変換
@@ -149,10 +153,12 @@ function mainLoop() {
         con.fillText(d2Vertex[i].x.toFixed(0) + "," + d2Vertex[i].y.toFixed(0), 10, i * 10 + 20);
 
 
-        con.beginPath();
-        con.arc(d2Vertex[i].x, d2Vertex[i].y, 5, 0, 360, false);
-        con.fillText(i, d2Vertex[i].x + 5, d2Vertex[i].y + 5);
-        con.fill();
+        if (isPointInFront) {
+            con.beginPath();
+            con.arc(d2Vertex[i].x, d2Vertex[i].y, 5, 0, 360, false);
+            con.fillText(i, d2Vertex[i].x + 5, d2Vertex[i].y + 5);
+            con.fill();
+        }
 
         con.fillText("Vector→" + intToPointVector.vector.x.toFixed(0) +
             "," + intToPointVector.vector.y.toFixed(0) +
