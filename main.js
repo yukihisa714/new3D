@@ -96,7 +96,7 @@ function mainLoop() {
 
         // 点がカメラの後ろにあるときに描画しない
         if (Math.sign(camVector.y) !== Math.sign(intToPointVector.vector.y)) {
-            // continue;
+            continue;
             isPointInFront = false;
         }
 
@@ -144,8 +144,8 @@ function mainLoop() {
 
         // 二次元座標に格納
         d2Vertex[i] = {
-            x: tmpVtx.x + can.width / 2,
-            y: can.height - (tmpVtx.z + can.height / 2),
+            x: tmpVtx.x * 400 / length + can.width / 2,
+            y: can.height - (tmpVtx.z * 400 / length + can.height / 2),
         };
 
         con.fillStyle = "black";
@@ -164,6 +164,7 @@ function mainLoop() {
             "," + intToPointVector.vector.y.toFixed(0) +
             "," + intToPointVector.vector.z.toFixed(0),
             d2Vertex[i].x + 15, d2Vertex[i].y + 5);
+        con.fillText("dist: " + length.toFixed(0), d2Vertex[i].x + 15, d2Vertex[i].y + 15);
 
 
 
