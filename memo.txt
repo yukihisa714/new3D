@@ -1,0 +1,30 @@
+直線と平面の交点を求める
+
+点(x0, y0, z0)を通り、ベクトルが(a, b, c)のとき
+
+t = (x - x0) / a
+  = (y - y0) / b
+  = (z - z0) / c
+
+とおける
+
+求める交点は
+{
+    x: at + x0,
+    y: bt + y0,
+    z: ct + z0,
+}
+
+平面 Ax + By + Cz + D = 0 に代入
+
+A(at + x0) + B(bt + y0) + C(ct + z0) + D = 0
+Aat + Ax0 + Bbt + By0 + Cct + Cz0 + D = 0
+t(Aa + Bb + Cc) = -Ax0 - By0 - Cz0 - D
+t = (-Ax0 - By0 - Cz0 - D) / (Aa + Bb + Cc)
+
+よって交点(x, y, z) は
+(
+    x: a((-Ax0 - By0 - Cz0 - D) / (Aa + Bb + Cc)) + x0
+    y: b((-Ax0 - By0 - Cz0 - D) / (Aa + Bb + Cc)) + y0
+    z: c((-Ax0 - By0 - Cz0 - D) / (Aa + Bb + Cc)) + z0
+)
