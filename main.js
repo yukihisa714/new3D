@@ -10,6 +10,13 @@ can.height = 270;
 can.style.background = "gray";
 document.body.appendChild(can);
 
+const can2 = document.createElement("canvas");
+const con2 = can2.getContext("2d");
+can2.width = 300;
+can2.height = 300;
+can2.style.background = "gray";
+document.body.appendChild(can2);
+
 let glovalVertex = [
     new Point(-200, 100, 200),
     new Point(200, 100, 200),
@@ -55,6 +62,7 @@ function drawLine(pos1, pos2) {
 
 function mainLoop() {
     con.clearRect(0, 0, can.width, can.height);
+    con2.clearRect(0, 0, 300, 300);
 
     camera.update();
 
@@ -144,8 +152,10 @@ function mainLoop() {
 
         // 二次元座標に格納
         d2Vertex[i] = {
-            x: tmpVtx.x * 400 / length + can.width / 2,
-            y: can.height - (tmpVtx.z * 400 / length + can.height / 2),
+            // x: tmpVtx.x * 400 / length + can.width / 2,
+            // y: can.height - (tmpVtx.z * 400 / length + can.height / 2),
+            x: tmpVtx.x + can.width / 2,
+            y: can.height - (tmpVtx.z + can.height / 2),
         };
 
         con.fillStyle = "black";
@@ -179,6 +189,33 @@ function mainLoop() {
             drawLine(d2Vertex[lines[i].point1], d2Vertex[lines[i].point2]);
         }
     }
+
+
+    for (const point of glovalVertex) {
+        con2.fillStyle = "black";
+        con2.beginPath();
+        con2.arc(point.x / 8 + 150, point.y / 8 + 150, 5, 0, 360, false);
+        con2.fill();
+    }
+
+    for (const line of lines) {
+        con2.strokeStyle = "black";
+        con2.beginPath();
+        con2.lineTo(glovalVertex[line.point1].x / 8 + 150, glovalVertex[line.point1].y / 8 + 150);
+        con2.lineTo(glovalVertex[line.point2].x / 8 + 150, glovalVertex[line.point2].y / 8 + 150);
+        con2.stroke();
+    }
+
+    con2.fillStyle = "red";
+    con2.beginPath();
+    con2.arc(camera.coord.x / 8 + 150, camera.coord.y / 8 + 150, 5, 0, 360, false);
+    con2.fill();
+
+    con2.strokeStyle = "red";
+    con2.beginPath();
+    con2.lineTo(camera.coord.x / 8 + 150, camera.coord.y / 8 + 150);
+    con2.lineTo(camera.normalVector.ed.x / 8 + 150, camera.normalVector.ed.y / 8 + 150);
+    con2.stroke();
 
     frame++;
 }
