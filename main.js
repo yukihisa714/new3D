@@ -5,8 +5,8 @@ import { Point, Vector, Line } from "./shape.js";
 
 const can = document.createElement("canvas");
 const con = can.getContext("2d");
-can.width = 360;
-can.height = 270;
+can.width = 540;
+can.height = 405;
 can.style.background = "gray";
 document.body.appendChild(can);
 
@@ -18,34 +18,41 @@ can2.style.background = "gray";
 document.body.appendChild(can2);
 
 let glovalVertex = [
-    new Point(-200, 100, 200),
-    new Point(200, 100, 200),
-    new Point(200, 100, -200),
-    new Point(-200, 100, -200),
-    new Point(-200, 500, 200),
-    new Point(200, 500, 200),
-    new Point(200, 500, -200),
-    new Point(-200, 500, -200),
-    new Point(0, -200, 0),
+    new Point(-200, 100, 200, true),
+    new Point(200, 100, 200, true),
+    new Point(200, 100, -200, true),
+    new Point(-200, 100, -200, true),
+    new Point(-200, 500, 200, true),
+    new Point(200, 500, 200, true),
+    new Point(200, 500, -200, true),
+    new Point(-200, 500, -200, true),
+    new Point(0, -200, 0, true),
+    new Point(0, 0, 0, false),
+    new Point(50, 0, 0, false),
+    new Point(0, 50, 0, false),
+    new Point(0, 0, 50, false),
 ];
 
 let lines = [
-    { point1: 0, point2: 1 },
-    { point1: 0, point2: 3 },
-    { point1: 0, point2: 4 },
-    { point1: 0, point2: 8 },
-    { point1: 1, point2: 2 },
-    { point1: 1, point2: 5 },
-    { point1: 1, point2: 8 },
-    { point1: 2, point2: 3 },
-    { point1: 2, point2: 6 },
-    { point1: 2, point2: 8 },
-    { point1: 3, point2: 7 },
-    { point1: 3, point2: 8 },
-    { point1: 4, point2: 5 },
-    { point1: 4, point2: 7 },
-    { point1: 5, point2: 6 },
-    { point1: 6, point2: 7 },
+    new Line(0, 1),
+    new Line(0, 3),
+    new Line(0, 4),
+    new Line(0, 8),
+    new Line(1, 2),
+    new Line(1, 5),
+    new Line(1, 8),
+    new Line(2, 3),
+    new Line(2, 6),
+    new Line(2, 8),
+    new Line(3, 7),
+    new Line(3, 8),
+    new Line(4, 5),
+    new Line(4, 7),
+    new Line(5, 6),
+    new Line(6, 7),
+    new Line(9, 10),
+    new Line(9, 11),
+    new Line(9, 12),
 ];
 
 let camera = new Camera();
@@ -71,7 +78,7 @@ function mainLoop() {
     // カメラ平面の方程式
     const planeEq = camera.planeEquation;
 
-    con.fillText("cam: " + camVector.x.toFixed(0) +
+    con.fillText("camVector: " + camVector.x.toFixed(0) +
         "," + camVector.y.toFixed(0) +
         "," + camVector.z.toFixed(0),
         10, 250);
@@ -81,8 +88,7 @@ function mainLoop() {
     let d2Vertex = [];
 
     for (let i = 0; i < glovalVertex.length; i++) {
-        const a = glovalVertex[i]
-        const point = new Point(a.x, a.y, a.z);
+        const point = glovalVertex[i];
         const length = calc3dLen(camera.coord, point);
         const t = -(planeEq.a * point.x + planeEq.b * point.y + planeEq.c * point.z + planeEq.d)
             / (planeEq.a * camVector.x + planeEq.b * camVector.y + planeEq.c * camVector.z);
@@ -164,10 +170,12 @@ function mainLoop() {
 
 
         if (isPointInFront) {
-            con.beginPath();
-            con.arc(d2Vertex[i].x, d2Vertex[i].y, 5, 0, 360, false);
-            con.fillText(i, d2Vertex[i].x + 5, d2Vertex[i].y + 5);
-            con.fill();
+            if (glovalVertex[i].isDraw) {
+                con.beginPath();
+                con.arc(d2Vertex[i].x, d2Vertex[i].y, 5, 0, 360, false);
+                con.fillText(i, d2Vertex[i].x + 5, d2Vertex[i].y + 5);
+                con.fill();
+            }
         }
 
         con.fillText("Vector→" + intToPointVector.vector.x.toFixed(0) +
@@ -185,13 +193,14 @@ function mainLoop() {
 
     for (let i = 0; i < lines.length; i++) {
         con.strokeStyle = "black";
-        if (d2Vertex[lines[i].point1] && d2Vertex[lines[i].point2]) {
-            drawLine(d2Vertex[lines[i].point1], d2Vertex[lines[i].point2]);
+        if (d2Vertex[lines[i].num1] && d2Vertex[lines[i].num2]) {
+            drawLine(d2Vertex[lines[i].num1], d2Vertex[lines[i].num2]);
         }
     }
 
 
     for (const point of glovalVertex) {
+        if (!point.isDraw) continue;
         con2.fillStyle = "black";
         con2.beginPath();
         con2.arc(point.x / 8 + 150, point.y / 8 + 150, 5, 0, 360, false);
@@ -201,8 +210,8 @@ function mainLoop() {
     for (const line of lines) {
         con2.strokeStyle = "black";
         con2.beginPath();
-        con2.lineTo(glovalVertex[line.point1].x / 8 + 150, glovalVertex[line.point1].y / 8 + 150);
-        con2.lineTo(glovalVertex[line.point2].x / 8 + 150, glovalVertex[line.point2].y / 8 + 150);
+        con2.lineTo(glovalVertex[line.num1].x / 8 + 150, glovalVertex[line.num1].y / 8 + 150);
+        con2.lineTo(glovalVertex[line.num2].x / 8 + 150, glovalVertex[line.num2].y / 8 + 150);
         con2.stroke();
     }
 

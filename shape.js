@@ -5,10 +5,11 @@ export class Point {
      * @param {number} y 
      * @param {number} z 
      */
-    constructor(x, y, z) {
+    constructor(x, y, z, isDraw) {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.isDraw = isDraw;
     }
 
     /**
@@ -19,18 +20,29 @@ export class Point {
     getDist(p) {
         return Math.sqrt((this.x - p.x) ** 2 + (this.y - p.y) ** 2 + (this.z - p.z) ** 2);
     }
+
+    getIsPointInFront() {
+
+    }
 }
 
+// export class Line {
+//     /**
+//      * 
+//      * @param {Point} st 
+//      * @param {Point} ed 
+//      */
+//     constructor(st, ed) {
+//         this.st = st;
+//         this.ed = ed;
+//         this.length = st.getDist(ed);
+//     }
+// }
+
 export class Line {
-    /**
-     * 
-     * @param {Point} st 
-     * @param {Point} ed 
-     */
-    constructor(st, ed) {
-        this.st = st;
-        this.ed = ed;
-        this.length = st.getDist(ed);
+    constructor(point1Num, point2Num) {
+        this.num1 = point1Num;
+        this.num2 = point2Num;
     }
 }
 
