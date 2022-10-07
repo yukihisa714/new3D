@@ -17,7 +17,7 @@ can2.height = 300;
 can2.style.background = "gray";
 document.body.appendChild(can2);
 
-let glovalVertex = [
+let globalVertex = [
     new Point(-200, 100, 200, true),
     new Point(200, 100, 200, true),
     new Point(200, 100, -200, true),
@@ -87,8 +87,8 @@ function mainLoop() {
     let intersectionVtx = [];
     let d2Vertex = [];
 
-    for (let i = 0; i < glovalVertex.length; i++) {
-        const point = glovalVertex[i];
+    for (let i = 0; i < globalVertex.length; i++) {
+        const point = globalVertex[i];
         const length = calc3dLen(camera.coord, point);
         const t = -(planeEq.a * point.x + planeEq.b * point.y + planeEq.c * point.z + planeEq.d)
             / (planeEq.a * camVector.x + planeEq.b * camVector.y + planeEq.c * camVector.z);
@@ -100,7 +100,7 @@ function mainLoop() {
             camVector.z * t + point.z,
         );
 
-        con.fillText(intersectionVtx[i].x.toFixed(0) + ", " + intersectionVtx[i].y.toFixed(0) + ", " + intersectionVtx[i].z.toFixed(0), 10, i * 10 + 120);
+        // con.fillText(intersectionVtx[i].x.toFixed(0) + ", " + intersectionVtx[i].y.toFixed(0) + ", " + intersectionVtx[i].z.toFixed(0), 10, i * 10 + 120);
 
         // 交点から点までのベクトル
         const intToPointVector = new Vector(intersectionVtx[i], point);
@@ -166,14 +166,14 @@ function mainLoop() {
 
         con.fillStyle = "black";
 
-        con.fillText(d2Vertex[i].x.toFixed(0) + "," + d2Vertex[i].y.toFixed(0), 10, i * 10 + 20);
+        // con.fillText(d2Vertex[i].x.toFixed(0) + "," + d2Vertex[i].y.toFixed(0), 10, i * 10 + 20);
 
 
         if (isPointInFront) {
-            if (glovalVertex[i].isDraw) {
+            if (globalVertex[i].isDraw) {
                 con.beginPath();
                 con.arc(d2Vertex[i].x, d2Vertex[i].y, 5, 0, 360, false);
-                con.fillText(i, d2Vertex[i].x + 5, d2Vertex[i].y + 5);
+                // con.fillText(i, d2Vertex[i].x + 5, d2Vertex[i].y + 5);
                 con.fill();
             }
         }
@@ -199,7 +199,7 @@ function mainLoop() {
     }
 
 
-    for (const point of glovalVertex) {
+    for (const point of globalVertex) {
         if (!point.isDraw) continue;
         con2.fillStyle = "black";
         con2.beginPath();
@@ -210,8 +210,8 @@ function mainLoop() {
     for (const line of lines) {
         con2.strokeStyle = "black";
         con2.beginPath();
-        con2.lineTo(glovalVertex[line.num1].x / 8 + 150, glovalVertex[line.num1].y / 8 + 150);
-        con2.lineTo(glovalVertex[line.num2].x / 8 + 150, glovalVertex[line.num2].y / 8 + 150);
+        con2.lineTo(globalVertex[line.num1].x / 8 + 150, globalVertex[line.num1].y / 8 + 150);
+        con2.lineTo(globalVertex[line.num2].x / 8 + 150, globalVertex[line.num2].y / 8 + 150);
         con2.stroke();
     }
 
