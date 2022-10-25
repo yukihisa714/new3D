@@ -166,11 +166,7 @@ function mainLoop() {
 
         con.fillStyle = "black";
 
-<<<<<<< HEAD
         con.fillText(`${d2Vertex[i].x.toFixed(0)}, ${d2Vertex[i].y.toFixed(0)}`, 10, i * 10 + 20);
-=======
-        // con.fillText(d2Vertex[i].x.toFixed(0) + "," + d2Vertex[i].y.toFixed(0), 10, i * 10 + 20);
->>>>>>> d330c66aec7f5f8509f871efbbfc53b4ff9636c6
 
 
         if (isPointInFront) {
