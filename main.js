@@ -166,7 +166,7 @@ function mainLoop() {
 
         con.fillStyle = "black";
 
-        con.fillText(d2Vertex[i].x.toFixed(0) + "," + d2Vertex[i].y.toFixed(0), 10, i * 10 + 20);
+        con.fillText(`${d2Vertex[i].x.toFixed(0)}, ${d2Vertex[i].y.toFixed(0)}`, 10, i * 10 + 20);
 
 
         if (isPointInFront) {
@@ -178,18 +178,16 @@ function mainLoop() {
             }
         }
 
-        con.fillText("Vector→" + intToPointVector.vector.x.toFixed(0) +
-            "," + intToPointVector.vector.y.toFixed(0) +
-            "," + intToPointVector.vector.z.toFixed(0),
+        con.fillText(`Vector→${intToPointVector.vector.x.toFixed(0)}, ${intToPointVector.vector.y.toFixed(0)}, ${intToPointVector.vector.z.toFixed(0)}`,
             d2Vertex[i].x + 15, d2Vertex[i].y + 5);
-        con.fillText("dist: " + length.toFixed(0), d2Vertex[i].x + 15, d2Vertex[i].y + 15);
+        con.fillText(`dist: ${length.toFixed(0)}`, d2Vertex[i].x + 15, d2Vertex[i].y + 15);
 
 
 
     }
 
-    con.fillText(camera.coord.x + ", " + camera.coord.y + ", " + camera.coord.z, 10, 270);
-    con.fillText(camera.rotate.x + ", " + camera.rotate.z, 10, 280);
+    con.fillText(`${camera.coord.x}, ${camera.coord.y}, ${camera.coord.z}`, 10, 270);
+    con.fillText(`${camera.rotate.x}, ${camera.rotate.z}`, 10, 280);
 
     for (let i = 0; i < lines.length; i++) {
         con.strokeStyle = "black";
