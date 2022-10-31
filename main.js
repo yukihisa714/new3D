@@ -78,10 +78,10 @@ function mainLoop() {
     // カメラ平面の方程式
     const planeEq = camera.planeEquation;
 
-    con.fillText("camVector: " + camVector.x.toFixed(0) +
-        "," + camVector.y.toFixed(0) +
-        "," + camVector.z.toFixed(0),
-        10, 250);
+    // con.fillText("camVector: " + camVector.x.toFixed(0) +
+    //     "," + camVector.y.toFixed(0) +
+    //     "," + camVector.z.toFixed(0),
+    //     10, 250);
 
 
     let intersectionVtx = [];
@@ -166,7 +166,7 @@ function mainLoop() {
 
         con.fillStyle = "black";
 
-        con.fillText(`${d2Vertex[i].x.toFixed(0)}, ${d2Vertex[i].y.toFixed(0)}`, 10, i * 10 + 20);
+        // con.fillText(`${d2Vertex[i].x.toFixed(0)}, ${d2Vertex[i].y.toFixed(0)}`, 10, i * 10 + 20);
 
 
         if (isPointInFront) {
@@ -178,16 +178,16 @@ function mainLoop() {
             }
         }
 
-        con.fillText(`Vector→${intToPointVector.vector.x.toFixed(0)}, ${intToPointVector.vector.y.toFixed(0)}, ${intToPointVector.vector.z.toFixed(0)}`,
-            d2Vertex[i].x + 15, d2Vertex[i].y + 5);
-        con.fillText(`dist: ${length.toFixed(0)}`, d2Vertex[i].x + 15, d2Vertex[i].y + 15);
+        // con.fillText(`Vector→${intToPointVector.vector.x.toFixed(0)}, ${intToPointVector.vector.y.toFixed(0)}, ${intToPointVector.vector.z.toFixed(0)}`,
+        //     d2Vertex[i].x + 15, d2Vertex[i].y + 5);
+        // con.fillText(`dist: ${length.toFixed(0)}`, d2Vertex[i].x + 15, d2Vertex[i].y + 15);
 
 
 
     }
 
-    con.fillText(`${camera.coord.x}, ${camera.coord.y}, ${camera.coord.z}`, 10, 270);
-    con.fillText(`${camera.rotate.x}, ${camera.rotate.z}`, 10, 280);
+    // con.fillText(`${camera.coord.x}, ${camera.coord.y}, ${camera.coord.z}`, 10, 270);
+    // con.fillText(`${camera.rotate.x}, ${camera.rotate.z}`, 10, 280);
 
     for (let i = 0; i < lines.length; i++) {
         con.strokeStyle = "black";
@@ -201,27 +201,27 @@ function mainLoop() {
         if (!point.isDraw) continue;
         con2.fillStyle = "black";
         con2.beginPath();
-        con2.arc(point.x / 8 + 150, point.y / 8 + 150, 5, 0, 360, false);
+        con2.arc(point.x / 8 + 150, 150 - point.y / 8, 5, 0, 360, false);
         con2.fill();
     }
 
     for (const line of lines) {
         con2.strokeStyle = "black";
         con2.beginPath();
-        con2.lineTo(globalVertex[line.num1].x / 8 + 150, globalVertex[line.num1].y / 8 + 150);
-        con2.lineTo(globalVertex[line.num2].x / 8 + 150, globalVertex[line.num2].y / 8 + 150);
+        con2.lineTo(globalVertex[line.num1].x / 8 + 150, 150 - globalVertex[line.num1].y / 8);
+        con2.lineTo(globalVertex[line.num2].x / 8 + 150, 150 - globalVertex[line.num2].y / 8);
         con2.stroke();
     }
 
     con2.fillStyle = "red";
     con2.beginPath();
-    con2.arc(camera.coord.x / 8 + 150, camera.coord.y / 8 + 150, 5, 0, 360, false);
+    con2.arc(camera.coord.x / 8 + 150, 150 - camera.coord.y / 8, 5, 0, 360, false);
     con2.fill();
 
     con2.strokeStyle = "red";
     con2.beginPath();
-    con2.lineTo(camera.coord.x / 8 + 150, camera.coord.y / 8 + 150);
-    con2.lineTo(camera.normalVector.ed.x / 8 + 150, camera.normalVector.ed.y / 8 + 150);
+    con2.lineTo(camera.coord.x / 8 + 150, 150 - camera.coord.y / 8);
+    con2.lineTo(camera.normalVector.ed.x / 8 + 150, 150 - camera.normalVector.ed.y / 8);
     con2.stroke();
 
     frame++;
