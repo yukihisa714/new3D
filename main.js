@@ -116,15 +116,15 @@ function mainLoop() {
 
         // カメラ平面との交点を二次元に変換
 
-        let tmpVtx = intersectionVtx[i];
+        let tmpIntVtx = intersectionVtx[i];
 
         let tmpRotate = {};
         let tmpNewRotate = {};
 
         let dif = {
-            x: tmpVtx.x - camera.coord.x,
-            y: tmpVtx.y - camera.coord.y,
-            z: tmpVtx.z - camera.coord.z,
+            x: tmpIntVtx.x - camera.coord.x,
+            y: tmpIntVtx.y - camera.coord.y,
+            z: tmpIntVtx.z - camera.coord.z,
         };
 
         let len = {
@@ -137,12 +137,12 @@ function mainLoop() {
         if (dif.y < 0) tmpRotate.z += 180;
         tmpNewRotate.z = tmpRotate.z - camera.rotate.z;
 
-        tmpVtx.x = sin(tmpNewRotate.z) * len.z;
-        tmpVtx.y = cos(tmpNewRotate.z) * len.z;
+        tmpIntVtx.x = sin(tmpNewRotate.z) * len.z;
+        tmpIntVtx.y = cos(tmpNewRotate.z) * len.z;
 
-        dif.x = tmpVtx.x - camera.coord.x;
-        dif.y = tmpVtx.y - camera.coord.y;
-        dif.z = tmpVtx.z - camera.coord.z;
+        dif.x = tmpIntVtx.x - camera.coord.x;
+        dif.y = tmpIntVtx.y - camera.coord.y;
+        dif.z = tmpIntVtx.z - camera.coord.z;
 
         len.x = Math.sqrt(dif.y ** 2 + dif.z ** 2);
         len.y = Math.sqrt(dif.x ** 2 + dif.z ** 2);
@@ -152,16 +152,16 @@ function mainLoop() {
         if (dif.y < 0) tmpRotate.x += 180;
         tmpNewRotate.x = tmpRotate.x - camera.rotate.x;
 
-        tmpVtx.z = sin(tmpNewRotate.x) * len.x;
-        tmpVtx.y = cos(tmpNewRotate.x) * len.x;
+        tmpIntVtx.z = sin(tmpNewRotate.x) * len.x;
+        tmpIntVtx.y = cos(tmpNewRotate.x) * len.x;
 
 
         // 二次元座標に格納
         d2Vertex[i] = {
-            // x: tmpVtx.x * 400 / length + can.width / 2,
-            // y: can.height - (tmpVtx.z * 400 / length + can.height / 2),
-            x: tmpVtx.x + can.width / 2,
-            y: can.height - (tmpVtx.z + can.height / 2),
+            // x: tmpIntVtx.x * 400 / length + can.width / 2,
+            // y: can.height - (tmpIntVtx.z * 400 / length + can.height / 2),
+            x: tmpIntVtx.x + can.width / 2,
+            y: can.height - (tmpIntVtx.z + can.height / 2),
         };
 
         con.fillStyle = "black";

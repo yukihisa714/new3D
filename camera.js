@@ -17,9 +17,9 @@ export class Camera {
         // 法線ベクトル
         this.normalVector = {
             length: 100, // 長さ
-            st: {}, // 始点
-            ed: {}, // 終点
-            vector: {}, // ベクトル
+            st: undefined, // 始点
+            ed: undefined, // 終点
+            vector: undefined, // ベクトル
         };
 
         // カメラの平面の方程式
