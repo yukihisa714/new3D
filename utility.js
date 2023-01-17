@@ -1,9 +1,7 @@
-// export let key = [];
-export let key = {};
+export const key = {};
 document.onkeydown = (e) => {
-    // key[e.keyCode] = true;
     key[e.key] = true;
-    console.log(e.key);
+    // console.log(e.key);
 }
 document.onkeyup = (e) => {
     key[e.key] = false;
