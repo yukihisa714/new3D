@@ -58,11 +58,11 @@ let lines = [
 let frame = 0;
 
 // canvasに線を描画する関数
-function drawLine(pos1, pos2) {
-    con.beginPath()
-    con.lineTo(pos1.x, pos1.y);
-    con.lineTo(pos2.x, pos2.y);
-    con.stroke();
+function drawLine(context, pos1, pos2) {
+    context.beginPath()
+    context.lineTo(pos1.x, pos1.y);
+    context.lineTo(pos2.x, pos2.y);
+    context.stroke();
 }
 
 function mainLoop() {
@@ -72,9 +72,9 @@ function mainLoop() {
     camera.update();
 
     // カメラの法線ベクトル
-    const camVector = camera.normalVector.vector;
+    const CNV = camera.normalVector.vector;
     // カメラ平面の方程式
-    const planeEq = camera.planeEquation;
+    const CPE = camera.planeEquation;
 
     // con.fillText("camVector: " + camVector.x.toFixed(0) +
     //     "," + camVector.y.toFixed(0) +
@@ -82,20 +82,20 @@ function mainLoop() {
     //     10, 250);
 
 
-    let intersectionVtx = [];
-    let d2Vertex = [];
+    const intersectionVtx = [];
+    const d2Vertex = [];
 
     for (let i = 0; i < globalVertex.length; i++) {
         const point = globalVertex[i];
         const length = calc3dLen(camera.coord, point);
-        const t = -(planeEq.a * point.x + planeEq.b * point.y + planeEq.c * point.z + planeEq.d)
-            / (planeEq.a * camVector.x + planeEq.b * camVector.y + planeEq.c * camVector.z);
+        const t = -(CPE.a * point.x + CPE.b * point.y + CPE.c * point.z + CPE.d)
+            / (CPE.a * CNV.x + CPE.b * CNV.y + CPE.c * CNV.z);
 
         // カメラ平面との交点
         intersectionVtx[i] = new Point(
-            camVector.x * t + point.x,
-            camVector.y * t + point.y,
-            camVector.z * t + point.z,
+            CNV.x * t + point.x,
+            CNV.y * t + point.y,
+            CNV.z * t + point.z,
         );
 
         // con.fillText(intersectionVtx[i].x.toFixed(0) + ", " + intersectionVtx[i].y.toFixed(0) + ", " + intersectionVtx[i].z.toFixed(0), 10, i * 10 + 120);
@@ -107,7 +107,7 @@ function mainLoop() {
         let isPointInFront = true;
 
         // 点がカメラの後ろにあるときに描画しない
-        if (Math.sign(camVector.y) !== Math.sign(intToPointVector.vector.y)) {
+        if (Math.sign(CNV.y) !== Math.sign(intToPointVector.vector.y)) {
             continue;
             isPointInFront = false;
         }
@@ -187,10 +187,10 @@ function mainLoop() {
     // con.fillText(`${camera.coord.x}, ${camera.coord.y}, ${camera.coord.z}`, 10, 270);
     // con.fillText(`${camera.rotate.x}, ${camera.rotate.z}`, 10, 280);
 
-    for (let i = 0; i < lines.length; i++) {
+    for (const line of lines) {
         con.strokeStyle = "black";
-        if (d2Vertex[lines[i].num1] && d2Vertex[lines[i].num2]) {
-            drawLine(d2Vertex[lines[i].num1], d2Vertex[lines[i].num2]);
+        if (d2Vertex[line.num1] && d2Vertex[line.num2]) {
+            drawLine(con, d2Vertex[line.num1], d2Vertex[line.num2]);
         }
     }
 
@@ -204,11 +204,16 @@ function mainLoop() {
     }
 
     for (const line of lines) {
+        const p1 = {
+            x: globalVertex[line.num1].x / 8 + 150,
+            y: 150 - globalVertex[line.num1].y / 8,
+        }
+        const p2 = {
+            x: globalVertex[line.num2].x / 8 + 150,
+            y: 150 - globalVertex[line.num2].y / 8,
+        }
         con2.strokeStyle = "black";
-        con2.beginPath();
-        con2.lineTo(globalVertex[line.num1].x / 8 + 150, 150 - globalVertex[line.num1].y / 8);
-        con2.lineTo(globalVertex[line.num2].x / 8 + 150, 150 - globalVertex[line.num2].y / 8);
-        con2.stroke();
+        drawLine(con2, p1, p2);
     }
 
     con2.fillStyle = "red";
