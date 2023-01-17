@@ -2,7 +2,7 @@ import { Point, Vector } from "./shape.js";
 import { key, sin, cos, tan, atan, calc3dLen } from "./utility.js";
 
 // カメラクラス
-export class Camera {
+class Camera {
     constructor() {
 
         // カメラの座標
@@ -69,7 +69,6 @@ export class Camera {
 
         // ベクトル
         this.normalVector = new Vector(this.coord, normalVectorEd);
-
     }
 
     // カメラ平面の方程式 ax+by+cz+d=0
@@ -94,3 +93,5 @@ export class Camera {
         this.updatePlaneEquation();
     }
 }
+
+export const camera = new Camera();

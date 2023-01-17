@@ -1,4 +1,4 @@
-import { Camera } from "./camera.js";
+import { camera } from "./camera.js";
 import { key, sin, cos, tan, atan, calc3dLen } from "./utility.js";
 import { Point, Vector, Line } from "./shape.js";
 
@@ -54,8 +54,6 @@ let lines = [
     new Line(9, 11),
     new Line(9, 12),
 ];
-
-let camera = new Camera();
 
 let frame = 0;
 
