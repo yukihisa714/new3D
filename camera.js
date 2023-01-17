@@ -31,15 +31,15 @@ export class Camera {
 
     }
     update() {
-        if (key[87]) { // 前
+        if (key["w"]) { // 前
             this.coord.x += sin(this.rotate.z + 0) * this.speed;
             this.coord.y += cos(this.rotate.z + 0) * this.speed;
         }
-        if (key[83]) { // 後ろ
+        if (key["s"]) { // 後ろ
             this.coord.x -= sin(this.rotate.z + 0) * this.speed;
             this.coord.y -= cos(this.rotate.z + 0) * this.speed;
         }
-        if (key[68]) { // 右
+        if (key["d"]) { // 右
             if (this.rotate.z === 0) {
                 this.coord.x += this.speed;
             }
@@ -48,7 +48,7 @@ export class Camera {
                 this.coord.y += cos(this.rotate.z + 90) * this.speed;
             }
         }
-        if (key[65]) { // 左
+        if (key["a"]) { // 左
             if (this.rotate.z === 0) {
                 this.coord.x -= this.speed;
             }
@@ -57,17 +57,17 @@ export class Camera {
                 this.coord.y += cos(this.rotate.z - 90) * this.speed;
             }
         }
-        if (key[32]) { // 上
+        if (key[" "]) { // 上
             this.coord.z += this.speed;
         }
-        if (key[16]) { // 下
+        if (key["Shift"]) { // 下
             this.coord.z -= this.speed;
         }
 
-        if (key[37]) this.rotate.z -= this.sensitive; // 左
-        if (key[39]) this.rotate.z += this.sensitive; // 右
-        if (key[38]) this.rotate.x += this.sensitive; // 上
-        if (key[40]) this.rotate.x -= this.sensitive; // 下
+        if (key["ArrowLeft"]) this.rotate.z -= this.sensitive; // 左
+        if (key["ArrowRight"]) this.rotate.z += this.sensitive; // 右
+        if (key["ArrowUp"]) this.rotate.x += this.sensitive; // 上
+        if (key["ArrowDown"]) this.rotate.x -= this.sensitive; // 下
 
         // 法線ベクトル
         // 始点

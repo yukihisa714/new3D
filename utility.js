@@ -1,10 +1,12 @@
-export let key = [];
+// export let key = [];
+export let key = {};
 document.onkeydown = (e) => {
-    key[e.keyCode] = true;
-    // console.log(e.key);
+    // key[e.keyCode] = true;
+    key[e.key] = true;
+    console.log(e.key);
 }
 document.onkeyup = (e) => {
-    key[e.keyCode] = false;
+    key[e.key] = false;
 }
 
 export function sin(theta) {
