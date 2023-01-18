@@ -28,3 +28,14 @@ t = (-Ax0 - By0 - Cz0 - D) / (Aa + Bb + Cc)
     y: b((-Ax0 - By0 - Cz0 - D) / (Aa + Bb + Cc)) + y0
     z: c((-Ax0 - By0 - Cz0 - D) / (Aa + Bb + Cc)) + z0
 )
+
+点の回転
+(x1, y1) を T 回転
+元の角度 A
+x2 = cos(A + T)
+   = r * cosA * cosT - r * sinA * sinT
+   = x1 * cosT - y1 * sinT
+
+y2 = sin(A + T)
+   = r * sinA * cosT + r * cosA * sinT
+   = y1 * cosT + x1 * sinT

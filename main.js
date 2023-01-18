@@ -116,8 +116,8 @@ function mainLoop() {
 
         let tmpIntVtx = intersectionVtx[i];
 
-        let tmpRotate = {};
-        let tmpNewRotate = {};
+        // let tmpRotate = {};
+        // let tmpNewRotate = {};
 
         let dif = {
             x: tmpIntVtx.x - camera.coord.x,
@@ -125,39 +125,52 @@ function mainLoop() {
             z: tmpIntVtx.z - camera.coord.z,
         };
 
-        let len = {
-            x: Math.sqrt(dif.y ** 2 + dif.z ** 2),
-            y: Math.sqrt(dif.x ** 2 + dif.z ** 2),
-            z: Math.sqrt(dif.x ** 2 + dif.y ** 2),
-        };
+        // let len = {
+        //     x: Math.sqrt(dif.y ** 2 + dif.z ** 2),
+        //     y: Math.sqrt(dif.x ** 2 + dif.z ** 2),
+        //     z: Math.sqrt(dif.x ** 2 + dif.y ** 2),
+        // };
 
-        tmpRotate.z = atan(dif.x / dif.y);
-        if (dif.y < 0) tmpRotate.z += 180;
-        tmpNewRotate.z = tmpRotate.z - camera.rotate.z;
+        const rotates = {
+            sinX: sin(camera.rotate.x),
+            cosX: cos(camera.rotate.x),
+            sinZ: sin(camera.rotate.z),
+            cosZ: cos(camera.rotate.z),
+        }
 
-        tmpIntVtx.x = sin(tmpNewRotate.z) * len.z;
-        tmpIntVtx.y = cos(tmpNewRotate.z) * len.z;
+        // tmpRotate.z = atan(dif.x / dif.y);
+        // if (dif.y < 0) tmpRotate.z += 180;
+        // tmpNewRotate.z = tmpRotate.z - camera.rotate.z;
+
+        // tmpIntVtx.x = sin(tmpNewRotate.z) * len.z;
+        // tmpIntVtx.y = cos(tmpNewRotate.z) * len.z;
+
+        tmpIntVtx.x = dif.x * rotates.cosZ - dif.y * rotates.sinZ;
+        tmpIntVtx.y = dif.y * rotates.cosZ + dif.x * rotates.sinZ;
 
         dif.x = tmpIntVtx.x - camera.coord.x;
         dif.y = tmpIntVtx.y - camera.coord.y;
         dif.z = tmpIntVtx.z - camera.coord.z;
 
-        len.x = Math.sqrt(dif.y ** 2 + dif.z ** 2);
-        len.y = Math.sqrt(dif.x ** 2 + dif.z ** 2);
-        len.z = Math.sqrt(dif.x ** 2 + dif.y ** 2);
+        // len.x = Math.sqrt(dif.y ** 2 + dif.z ** 2);
+        // len.y = Math.sqrt(dif.x ** 2 + dif.z ** 2);
+        // len.z = Math.sqrt(dif.x ** 2 + dif.y ** 2);
 
-        tmpRotate.x = atan(dif.z / dif.y);
-        if (dif.y < 0) tmpRotate.x += 180;
-        tmpNewRotate.x = tmpRotate.x - camera.rotate.x;
+        // tmpRotate.x = atan(dif.z / dif.y);
+        // if (dif.y < 0) tmpRotate.x += 180;
+        // tmpNewRotate.x = tmpRotate.x - camera.rotate.x;
 
-        tmpIntVtx.z = sin(tmpNewRotate.x) * len.x;
-        tmpIntVtx.y = cos(tmpNewRotate.x) * len.x;
+        // tmpIntVtx.z = sin(tmpNewRotate.x) * len.x;
+        // tmpIntVtx.y = cos(tmpNewRotate.x) * len.x;
+
+        tmpIntVtx.y = dif.y * rotates.cosX + dif.z * rotates.sinX;
+        tmpIntVtx.z = dif.z * rotates.cosX - dif.y * rotates.sinX;
 
 
         // 二次元座標に格納
         d2Vertex[i] = {
-            x: tmpIntVtx.x * 400 / length + can.width / 2,
-            y: can.height - (tmpIntVtx.z * 400 / length + can.height / 2),
+            x: tmpIntVtx.x * 20 / Math.sqrt(length) + can.width / 2,
+            y: can.height - (tmpIntVtx.z * 20 / Math.sqrt(length) + can.height / 2),
             // x: tmpIntVtx.x + can.width / 2,
             // y: can.height - (tmpIntVtx.z + can.height / 2),
         };
@@ -178,7 +191,7 @@ function mainLoop() {
 
         // con.fillText(`Vector→${intToPointVector.vector.x.toFixed(0)}, ${intToPointVector.vector.y.toFixed(0)}, ${intToPointVector.vector.z.toFixed(0)}`,
         //     d2Vertex[i].x + 15, d2Vertex[i].y + 5);
-        // con.fillText(`dist: ${length.toFixed(0)}`, d2Vertex[i].x + 15, d2Vertex[i].y + 15);
+        con.fillText(`dist: ${length.toFixed(0)}`, d2Vertex[i].x + 15, d2Vertex[i].y + 15);
 
 
 
