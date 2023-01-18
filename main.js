@@ -114,12 +114,12 @@ function mainLoop() {
 
         // カメラ平面との交点を二次元に変換
 
-        let tmpIntVtx = intersectionVtx[i];
+        const tmpIntVtx = intersectionVtx[i];
 
         // let tmpRotate = {};
         // let tmpNewRotate = {};
 
-        let dif = {
+        const dif = {
             x: tmpIntVtx.x - camera.coord.x,
             y: tmpIntVtx.y - camera.coord.y,
             z: tmpIntVtx.z - camera.coord.z,
