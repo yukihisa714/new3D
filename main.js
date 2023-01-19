@@ -3,12 +3,8 @@ import { key, sin, cos, tan, atan, calc3dLen } from "./utility.js";
 import { Point, Vector, Line, globalVertex, lines } from "./shape.js";
 
 
-const can = document.createElement("canvas");
-const con = can.getContext("2d");
-can.width = 540;
-can.height = 405;
-can.style.background = "gray";
-document.body.appendChild(can);
+const can = camera.can;
+const con = camera.con;
 
 const can2 = document.createElement("canvas");
 const con2 = can2.getContext("2d");

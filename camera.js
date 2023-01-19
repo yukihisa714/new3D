@@ -1,4 +1,4 @@
-import { Point, Vector } from "./shape.js";
+import { Point, Vector, globalVertex, lines } from "./shape.js";
 import { key, sin, cos, tan, atan, calc3dLen } from "./utility.js";
 
 // カメラクラス
@@ -20,6 +20,15 @@ class Camera {
 
         // 法線ベクトル
         this.normalVectorLength = 100;
+
+        // キャンバスの設定
+        this.can = document.createElement("canvas");
+        this.con = this.can.getContext("2d");
+        this.can.width = 540;
+        this.can.height = 405;
+        this.can.style.background = "gray";
+        document.body.appendChild(this.can);
+
     }
 
     // キーボードの操作
