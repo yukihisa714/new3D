@@ -1,6 +1,6 @@
 import { camera } from "./camera.js";
 import { key, sin, cos, tan, atan, calc3dLen } from "./utility.js";
-import { Point, Vector, Line } from "./shape.js";
+import { Point, Vector, Line, globalVertex, lines } from "./shape.js";
 
 
 const can = document.createElement("canvas");
@@ -12,48 +12,12 @@ document.body.appendChild(can);
 
 const can2 = document.createElement("canvas");
 const con2 = can2.getContext("2d");
-can2.width = 300;
-can2.height = 300;
+can2.width = 240;
+can2.height = 240;
 can2.style.background = "gray";
 document.body.appendChild(can2);
 
-let globalVertex = [
-    new Point(-200, 100, 200, true),
-    new Point(200, 100, 200, true),
-    new Point(200, 100, -200, true),
-    new Point(-200, 100, -200, true),
-    new Point(-200, 500, 200, true),
-    new Point(200, 500, 200, true),
-    new Point(200, 500, -200, true),
-    new Point(-200, 500, -200, true),
-    new Point(0, -200, 0, true),
-    new Point(0, 0, 0, false),
-    new Point(50, 0, 0, false),
-    new Point(0, 50, 0, false),
-    new Point(0, 0, 50, false),
-];
-
-let lines = [
-    new Line(0, 1),
-    new Line(0, 3),
-    new Line(0, 4),
-    new Line(0, 8),
-    new Line(1, 2),
-    new Line(1, 5),
-    new Line(1, 8),
-    new Line(2, 3),
-    new Line(2, 6),
-    new Line(2, 8),
-    new Line(3, 7),
-    new Line(3, 8),
-    new Line(4, 5),
-    new Line(4, 7),
-    new Line(5, 6),
-    new Line(6, 7),
-    new Line(9, 10),
-    new Line(9, 11),
-    new Line(9, 12),
-];
+const hc2 = can2.width / 2;
 
 let frame = 0;
 
@@ -114,10 +78,7 @@ function mainLoop() {
 
         // カメラ平面との交点を二次元に変換
 
-        const tmpIntVtx = intersectionVtx[i];
-
-        // let tmpRotate = {};
-        // let tmpNewRotate = {};
+        const tmpIntVtx = Object.assign({}, intersectionVtx[i]);
 
         const dif = {
             x: tmpIntVtx.x - camera.coord.x,
@@ -125,46 +86,22 @@ function mainLoop() {
             z: tmpIntVtx.z - camera.coord.z,
         };
 
-        // let len = {
-        //     x: Math.sqrt(dif.y ** 2 + dif.z ** 2),
-        //     y: Math.sqrt(dif.x ** 2 + dif.z ** 2),
-        //     z: Math.sqrt(dif.x ** 2 + dif.y ** 2),
-        // };
+        const sinX = sin(camera.rotate.x);
+        const cosX = cos(camera.rotate.x);
+        const sinZ = sin(camera.rotate.z);
+        const cosZ = cos(camera.rotate.z);
 
-        const rotates = {
-            sinX: sin(camera.rotate.x),
-            cosX: cos(camera.rotate.x),
-            sinZ: sin(camera.rotate.z),
-            cosZ: cos(camera.rotate.z),
-        }
+        // 三角関数の点の回転を利用
+        tmpIntVtx.x = dif.x * cosZ - dif.y * sinZ;
+        tmpIntVtx.y = dif.y * cosZ + dif.x * sinZ;
 
-        // tmpRotate.z = atan(dif.x / dif.y);
-        // if (dif.y < 0) tmpRotate.z += 180;
-        // tmpNewRotate.z = tmpRotate.z - camera.rotate.z;
-
-        // tmpIntVtx.x = sin(tmpNewRotate.z) * len.z;
-        // tmpIntVtx.y = cos(tmpNewRotate.z) * len.z;
-
-        tmpIntVtx.x = dif.x * rotates.cosZ - dif.y * rotates.sinZ;
-        tmpIntVtx.y = dif.y * rotates.cosZ + dif.x * rotates.sinZ;
-
-        dif.x = tmpIntVtx.x - camera.coord.x;
+        // データの更新
+        // dif.x = tmpIntVtx.x - camera.coord.x;
         dif.y = tmpIntVtx.y - camera.coord.y;
         dif.z = tmpIntVtx.z - camera.coord.z;
 
-        // len.x = Math.sqrt(dif.y ** 2 + dif.z ** 2);
-        // len.y = Math.sqrt(dif.x ** 2 + dif.z ** 2);
-        // len.z = Math.sqrt(dif.x ** 2 + dif.y ** 2);
-
-        // tmpRotate.x = atan(dif.z / dif.y);
-        // if (dif.y < 0) tmpRotate.x += 180;
-        // tmpNewRotate.x = tmpRotate.x - camera.rotate.x;
-
-        // tmpIntVtx.z = sin(tmpNewRotate.x) * len.x;
-        // tmpIntVtx.y = cos(tmpNewRotate.x) * len.x;
-
-        tmpIntVtx.y = dif.y * rotates.cosX + dif.z * rotates.sinX;
-        tmpIntVtx.z = dif.z * rotates.cosX - dif.y * rotates.sinX;
+        tmpIntVtx.y = dif.y * cosX + dif.z * sinX;
+        tmpIntVtx.z = dif.z * cosX - dif.y * sinX;
 
 
         // 二次元座標に格納
@@ -212,18 +149,18 @@ function mainLoop() {
         if (!point.isDraw) continue;
         con2.fillStyle = "black";
         con2.beginPath();
-        con2.arc(point.x / 8 + 150, 150 - point.y / 8, 5, 0, 360, false);
+        con2.arc(point.x / 8 + hc2, hc2 - point.y / 8, 5, 0, 360, false);
         con2.fill();
     }
 
     for (const line of lines) {
         const p1 = {
-            x: globalVertex[line.num1].x / 8 + 150,
-            y: 150 - globalVertex[line.num1].y / 8,
+            x: globalVertex[line.num1].x / 8 + hc2,
+            y: hc2 - globalVertex[line.num1].y / 8,
         }
         const p2 = {
-            x: globalVertex[line.num2].x / 8 + 150,
-            y: 150 - globalVertex[line.num2].y / 8,
+            x: globalVertex[line.num2].x / 8 + hc2,
+            y: hc2 - globalVertex[line.num2].y / 8,
         }
         con2.strokeStyle = "black";
         drawLine(con2, p1, p2);
@@ -231,13 +168,13 @@ function mainLoop() {
 
     con2.fillStyle = "red";
     con2.beginPath();
-    con2.arc(camera.coord.x / 8 + 150, 150 - camera.coord.y / 8, 5, 0, 360, false);
+    con2.arc(camera.coord.x / 8 + hc2, hc2 - camera.coord.y / 8, 5, 0, 360, false);
     con2.fill();
 
     con2.strokeStyle = "red";
     con2.beginPath();
-    con2.lineTo(camera.coord.x / 8 + 150, 150 - camera.coord.y / 8);
-    con2.lineTo(camera.normalVector.ed.x / 8 + 150, 150 - camera.normalVector.ed.y / 8);
+    con2.lineTo(camera.coord.x / 8 + hc2, hc2 - camera.coord.y / 8);
+    con2.lineTo(camera.normalVector.ed.x / 8 + hc2, hc2 - camera.normalVector.ed.y / 8);
     con2.stroke();
 
     frame++;

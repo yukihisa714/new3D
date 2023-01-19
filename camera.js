@@ -15,8 +15,8 @@ class Camera {
         };
 
         // カメラの移動速度
-        this.speed = 2;
-        this.sensitive = 0.5;
+        this.speed = 3;
+        this.sensitive = 0.8;
 
         // 法線ベクトル
         this.normalVectorLength = 100;

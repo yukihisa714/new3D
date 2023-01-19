@@ -76,3 +76,42 @@ export class Vector {
         };
     }
 }
+
+
+export const globalVertex = [
+    new Point(-200, 100, 200, true),
+    new Point(200, 100, 200, true),
+    new Point(200, 100, -200, true),
+    new Point(-200, 100, -200, true),
+    new Point(-200, 500, 200, true),
+    new Point(200, 500, 200, true),
+    new Point(200, 500, -200, true),
+    new Point(-200, 500, -200, true),
+    new Point(0, -200, 0, true),
+    new Point(0, 0, 0, false),
+    new Point(50, 0, 0, false),
+    new Point(0, 50, 0, false),
+    new Point(0, 0, 50, false),
+];
+
+export const lines = [
+    new Line(0, 1),
+    new Line(0, 3),
+    new Line(0, 4),
+    new Line(0, 8),
+    new Line(1, 2),
+    new Line(1, 5),
+    new Line(1, 8),
+    new Line(2, 3),
+    new Line(2, 6),
+    new Line(2, 8),
+    new Line(3, 7),
+    new Line(3, 8),
+    new Line(4, 5),
+    new Line(4, 7),
+    new Line(5, 6),
+    new Line(6, 7),
+    new Line(9, 10),
+    new Line(9, 11),
+    new Line(9, 12),
+];
