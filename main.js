@@ -96,7 +96,7 @@ function mainLoop() {
         dif.y = tmpIntVtx.y - camera.coord.y;
         dif.z = tmpIntVtx.z - camera.coord.z;
 
-        tmpIntVtx.y = dif.y * cosX + dif.z * sinX;
+        // tmpIntVtx.y = dif.y * cosX + dif.z * sinX;
         tmpIntVtx.z = dif.z * cosX - dif.y * sinX;
 
 
