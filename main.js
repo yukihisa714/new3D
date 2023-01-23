@@ -79,7 +79,7 @@ function mainLoop() {
         const dif = {
             x: tmpIntVtx.x - camera.coord.x,
             y: tmpIntVtx.y - camera.coord.y,
-            z: tmpIntVtx.z - camera.coord.z,
+            // z: tmpIntVtx.z - camera.coord.z,
         };
 
         const sinX = sin(camera.rotate.x);
