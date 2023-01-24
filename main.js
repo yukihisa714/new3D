@@ -101,11 +101,15 @@ function mainLoop() {
 
 
         // 二次元座標に格納
+        // d2Vertex[i] = {
+        //     x: tmpIntVtx.x * 20 / Math.sqrt(length) + can.width / 2,
+        //     y: can.height - (tmpIntVtx.z * 20 / Math.sqrt(length) + can.height / 2),
+        //     // x: tmpIntVtx.x + can.width / 2,
+        //     // y: can.height - (tmpIntVtx.z + can.height / 2),
+        // };
         d2Vertex[i] = {
-            x: tmpIntVtx.x * 20 / Math.sqrt(length) + can.width / 2,
-            y: can.height - (tmpIntVtx.z * 20 / Math.sqrt(length) + can.height / 2),
-            // x: tmpIntVtx.x + can.width / 2,
-            // y: can.height - (tmpIntVtx.z + can.height / 2),
+            x: tmpIntVtx.x * 400 / length + can.width / 2,
+            y: can.height - (tmpIntVtx.z * 400 / length + can.height / 2),
         };
 
         con.fillStyle = "black";

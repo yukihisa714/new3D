@@ -18,7 +18,7 @@ class Camera {
     // }
     // const camera = new Camera();
 
-    // 法線ベクトル
+    // 法線ベクトルの更新
     updateNormalVector() {
         const tmpZ1 = sin(this.rotate.x) * this.normalVectorLength;
         const tmpY1 = cos(this.rotate.x) * this.normalVectorLength;
@@ -61,8 +61,7 @@ const CPE = camera.planeEquation;
 const point = globalVertex[i];
 
 
-const t = -(CPE.a * point.x + CPE.b * point.y + CPE.c * point.z + CPE.d)
-    / (CPE.a * CNV.x + CPE.b * CNV.y + CPE.c * CNV.z);
+const t = -(CPE.a * point.x + CPE.b * point.y + CPE.c * point.z + CPE.d) / (CPE.a * CNV.x + CPE.b * CNV.y + CPE.c * CNV.z);
 
 // カメラ平面との交点
 intersectionVtx[i] = new Point(
@@ -70,6 +69,14 @@ intersectionVtx[i] = new Point(
     CNV.y * t + point.y,
     CNV.z * t + point.z,
 );
+
+class Point {
+    constructor(x, y, z) {
+        this.x = x; // x座標
+        this.y = y; // y座標
+        this.z = z; // z座標
+    }
+}
 
 class Vector {
     constructor(st, ed) {
@@ -82,3 +89,39 @@ class Vector {
         };
     }
 }
+
+
+const dif = {
+    x: tmpIntVtx.x - camera.coord.x,
+    y: tmpIntVtx.y - camera.coord.y,
+    z: tmpIntVtx.z - camera.coord.z,
+};
+
+const sinX = sin(camera.rotate.x);
+const cosX = cos(camera.rotate.x);
+const sinZ = sin(camera.rotate.z);
+const cosZ = cos(camera.rotate.z);
+
+// 加法定理の点の回転を利用
+tmpIntVtx.x = dif.x * cosZ - dif.y * sinZ;
+tmpIntVtx.y = dif.y * cosZ + dif.x * sinZ;
+
+// データの更新
+dif.x = tmpIntVtx.x - camera.coord.x;
+dif.y = tmpIntVtx.y - camera.coord.y;
+dif.z = tmpIntVtx.z - camera.coord.z;
+
+// 加法定理の点の回転を利用
+mpIntVtx.y = dif.y * cosX + dif.z * sinX;
+tmpIntVtx.z = dif.z * cosX - dif.y * sinX;
+
+// 二次元座標の配列に格納
+d2Vertex[i] = {
+    x: tmpIntVtx.x,
+    y: tmpIntVtx.z,
+};
+
+
+// 二次元座標の配列に格納
+d2Vertex[i].x = d2Vertex[i].x * 20 / Math.sqrt(length) + can.width / 2;
+d2Vertex[i].y = can.height - (tmpInd2Vertex[i].y * 20 / Math.sqrt(length) + can.height / 2);
